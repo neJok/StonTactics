@@ -1,0 +1,526 @@
+definitions:
+  domain.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.Folder:
+    properties:
+      id:
+        type: string
+      name:
+        maxLength: 100
+        type: string
+      spreadouts:
+        items:
+          type: string
+        type: array
+      strategies:
+        items:
+          type: string
+        type: array
+    required:
+    - name
+    type: object
+  domain.FolderAddSpreadingRequest:
+    properties:
+      folder_id:
+        type: string
+      spreading_id:
+        type: string
+    required:
+    - folder_id
+    - spreading_id
+    type: object
+  domain.FolderAddStrategyRequest:
+    properties:
+      folder_id:
+        type: string
+      strategy_id:
+        type: string
+    required:
+    - folder_id
+    - strategy_id
+    type: object
+  domain.FolderCreateRequest:
+    properties:
+      name:
+        maxLength: 100
+        type: string
+    required:
+    - name
+    type: object
+  domain.Profile:
+    properties:
+      avatar_url:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  domain.RefreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  domain.RefreshTokenResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  domain.Spreading:
+    properties:
+      elements:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      id:
+        type: string
+      map_name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        type: string
+    required:
+    - elements
+    - map_name
+    - name
+    type: object
+  domain.SpreadingCreateRequest:
+    properties:
+      elements:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      map_name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        type: string
+    required:
+    - elements
+    - map_name
+    - name
+    type: object
+  domain.SpreadingUpdateRequest:
+    properties:
+      elements:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+    required:
+    - elements
+    type: object
+  domain.Strategy:
+    properties:
+      id:
+        type: string
+      map_name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        type: string
+      parts:
+        additionalProperties: true
+        type: object
+    required:
+    - map_name
+    - name
+    - parts
+    type: object
+  domain.StrategyCreateRequest:
+    properties:
+      map_name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      name:
+        maxLength: 100
+        type: string
+      parts:
+        additionalProperties: true
+        type: object
+    required:
+    - map_name
+    - name
+    - parts
+    type: object
+  domain.StrategyUpdateRequest:
+    properties:
+      parts:
+        additionalProperties: true
+        type: object
+    required:
+    - parts
+    type: object
+  domain.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Test
+paths:
+  /api/folder:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/domain.Folder'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Получить все папки пользователя
+      tags:
+      - Folder
+    post:
+      parameters:
+      - description: folder
+        in: body
+        name: folder
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FolderCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Создать папку
+      tags:
+      - Folder
+  /api/folder/spreading:
+    put:
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FolderAddSpreadingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Добавить раскидку в папку
+      tags:
+      - Folder
+  /api/folder/strategy:
+    put:
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FolderAddStrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Добавить стратегию в папку
+      tags:
+      - Folder
+  /api/profile:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Profile'
+      security:
+      - Bearer: []
+      summary: Получить информацию о пользователе
+      tags:
+      - User
+  /api/spreading:
+    get:
+      parameters:
+      - description: ids
+        in: query
+        name: ids
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/domain.Spreading'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Получить несколько раскидок
+      tags:
+      - Spreading
+    post:
+      parameters:
+      - description: spreading
+        in: body
+        name: spreading
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SpreadingCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Spreading'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Создать раскидку
+      tags:
+      - Spreading
+  /api/spreading/{id}:
+    get:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Spreading'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Получить одну раскидку по айди
+      tags:
+      - Spreading
+    put:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: parts
+        in: body
+        name: parts
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SpreadingUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Обновить elements раскидки
+      tags:
+      - Spreading
+  /api/strategy:
+    get:
+      parameters:
+      - description: ids
+        in: query
+        name: ids
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/domain.Strategy'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Получить несколько стратегий
+      tags:
+      - Strategy
+    post:
+      parameters:
+      - description: strategy
+        in: body
+        name: strategy
+        required: true
+        schema:
+          $ref: '#/definitions/domain.StrategyCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.StrategyCreateRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Создать стратегию
+      tags:
+      - Strategy
+  /api/strategy/{id}:
+    get:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Strategy'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Получить одну стратегию по айди
+      tags:
+      - Strategy
+    put:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: parts
+        in: body
+        name: parts
+        required: true
+        schema:
+          $ref: '#/definitions/domain.StrategyUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Обновить parts стратегии
+      tags:
+      - Strategy
+  /refresh:
+    post:
+      parameters:
+      - description: refreshToken
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/domain.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Обновить токены
+      tags:
+      - Refresh
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
