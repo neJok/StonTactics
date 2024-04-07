@@ -650,6 +650,9 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "pro": {
+                    "type": "boolean"
                 }
             }
         },

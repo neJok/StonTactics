@@ -660,6 +660,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "pro": {
+                    "type": "boolean"
                 }
             }
         },

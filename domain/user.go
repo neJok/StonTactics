@@ -2,17 +2,24 @@ package domain
 
 import (
 	"context"
+	"time"
 )
 
 const (
 	CollectionUser = "users"
 )
 
+type UserPro struct {
+	Active bool       `bson:"active"`
+	Until  *time.Time `bson:"until"`
+}
+
 type User struct {
-	ID        string `bson:"_id"`
-	Name      string `bson:"name"`
-	Email     string `bson:"email"`
-	AvatarURL string `bson:"avatar_url"`
+	ID        string  `bson:"_id"`
+	Name      string  `bson:"name"`
+	Email     string  `bson:"email"`
+	AvatarURL string  `bson:"avatar_url"`
+	Pro       UserPro `bson:"pro"`
 }
 
 type UserRepository interface {

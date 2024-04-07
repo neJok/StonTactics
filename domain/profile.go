@@ -7,6 +7,7 @@ type Profile struct {
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	AvatarURl string `json:"avatar_url"`
+	Pro       bool   `json:"pro"`
 }
 
 type ProfileUsecase interface {

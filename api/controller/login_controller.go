@@ -79,6 +79,10 @@ func (sc *LoginController) Login(c *gin.Context) {
 			Name:      data.Name,
 			Email:     data.Email,
 			AvatarURL: data.Picture,
+			Pro: domain.UserPro{
+				Active: true,
+				Until:  nil,
+			}, // TODO: set false in prod
 		}
 	case "vk":
 		// Получение данных от VK

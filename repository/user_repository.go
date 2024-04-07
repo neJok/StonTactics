@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"stontactics/domain"
 	"stontactics/mongo"
+	"time"
 )
 
 type userRepository struct {
@@ -32,7 +33,23 @@ func (ur *userRepository) GetByID(c context.Context, id string) (domain.User, er
 
 	var user domain.User
 	err := collection.FindOne(c, bson.M{"_id": id}).Decode(&user)
-	return user, err
+
+	if err != nil {
+		return user, err
+	}
+
+	if user.Pro.Active && user.Pro.Until != nil {
+		now := time.Now()
+		if now.After(*user.Pro.Until) {
+			user.Pro = domain.UserPro{
+				Active: false,
+				Until:  nil,
+			}
+			defer collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"pro": user.Pro}})
+		}
+	}
+
+	return user, nil
 }
 
 func (ur *userRepository) UpdateMetaData(c context.Context, id string, name string, avatarUrl string) error {
