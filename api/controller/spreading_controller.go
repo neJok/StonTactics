@@ -107,18 +107,18 @@ func (sc *SpreadingController) FetchOne(c *gin.Context) {
 }
 
 // Update	godoc
-// @Summary		Обновить elements раскидки
+// @Summary		Обновить раскидку
 // @Tags        Spreading
 // @Router      /api/spreading/{id} [put]
 // @Success		200		{object}	nil
 // @Failure		400		{object}	domain.ErrorResponse
 // @Param       id		path	string	true	"id"
-// @Param       parts	body	domain.SpreadingUpdateRequest	true	"parts"
+// @Param       update	body	domain.SpreadingUpdateRequest	true	"update"
 // @Produce		json
 // @Security 	Bearer
 func (sc *SpreadingController) Update(c *gin.Context) {
-	var spreadingRequest domain.SpreadingUpdateRequest
-	err := c.ShouldBindBodyWith(&spreadingRequest, binding.JSON)
+	var spreadingUpdateRequest domain.SpreadingUpdateRequest
+	err := c.ShouldBindBodyWith(&spreadingUpdateRequest, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -126,7 +126,7 @@ func (sc *SpreadingController) Update(c *gin.Context) {
 
 	id := c.Param("id")
 
-	err = sc.SpreadingUsecase.Update(c, id, spreadingRequest.Elements)
+	err = sc.SpreadingUsecase.Update(c, id, spreadingUpdateRequest.Elements, spreadingUpdateRequest.MapName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return

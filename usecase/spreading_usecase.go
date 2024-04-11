@@ -37,8 +37,8 @@ func (su *spreadingUsecase) FetchByID(c context.Context, id string) (domain.Spre
 	return su.spreadingRepository.FetchByID(ctx, id)
 }
 
-func (su *spreadingUsecase) Update(c context.Context, id string, elements []map[string]interface{}) error {
+func (su *spreadingUsecase) Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error {
 	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
 	defer cancel()
-	return su.spreadingRepository.Update(ctx, id, elements)
+	return su.spreadingRepository.Update(ctx, id, elements, mapName)
 }

@@ -22,14 +22,14 @@ type StrategyRepository interface {
 	Create(c context.Context, strategy *Strategy) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
-	Update(c context.Context, id string, parts map[string]interface{}) error
+	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
 }
 
 type StrategyUsecase interface {
 	Create(c context.Context, strategy *Strategy) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
-	Update(c context.Context, id string, parts map[string]interface{}) error
+	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
 }
 
 type StrategyResponse struct {
@@ -46,4 +46,5 @@ type StrategyCreateRequest struct {
 
 type StrategyUpdateRequest struct {
 	Parts map[string]interface{} `bson:"parts" form:"parts" binding:"required" json:"parts"`
+	MapName string               `bson:"map_name" form:"map_name" binding:"required" json:"map_name"`
 }

@@ -72,7 +72,7 @@ func (sr *spreadingRepository) FetchByID(c context.Context, id string) (domain.S
 	return spreading, err
 }
 
-func (sr *spreadingRepository) Update(c context.Context, id string, elements []map[string]interface{}) error {
+func (sr *spreadingRepository) Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error {
 	collection := sr.database.Collection(sr.collection)
 
 	idHex, err := primitive.ObjectIDFromHex(id)
@@ -80,6 +80,6 @@ func (sr *spreadingRepository) Update(c context.Context, id string, elements []m
 		return err
 	}
 
-	_, err = collection.UpdateOne(c, bson.M{"_id": idHex}, bson.M{"$set": bson.M{"elements": elements}})
+	_, err = collection.UpdateOne(c, bson.M{"_id": idHex}, bson.M{"$set": bson.M{"elements": elements, "map_name": mapName}})
 	return err
 }

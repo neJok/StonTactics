@@ -319,7 +319,7 @@
                 "tags": [
                     "Spreading"
                 ],
-                "summary": "Обновить elements раскидки",
+                "summary": "Обновить раскидку",
                 "parameters": [
                     {
                         "type": "string",
@@ -329,8 +329,8 @@
                         "required": true
                     },
                     {
-                        "description": "parts",
-                        "name": "parts",
+                        "description": "update",
+                        "name": "update",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -484,7 +484,7 @@
                 "tags": [
                     "Strategy"
                 ],
-                "summary": "Обновить parts стратегии",
+                "summary": "Обновить стратегию",
                 "parameters": [
                     {
                         "type": "string",
@@ -494,8 +494,8 @@
                         "required": true
                     },
                     {
-                        "description": "parts",
-                        "name": "parts",
+                        "description": "update",
+                        "name": "update",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -736,7 +736,8 @@
         "domain.SpreadingUpdateRequest": {
             "type": "object",
             "required": [
-                "elements"
+                "elements",
+                "map_name"
             ],
             "properties": {
                 "elements": {
@@ -745,6 +746,9 @@
                         "type": "object",
                         "additionalProperties": true
                     }
+                },
+                "map_name": {
+                    "type": "string"
                 }
             }
         },
@@ -800,9 +804,13 @@
         "domain.StrategyUpdateRequest": {
             "type": "object",
             "required": [
+                "map_name",
                 "parts"
             ],
             "properties": {
+                "map_name": {
+                    "type": "string"
+                },
                 "parts": {
                     "type": "object",
                     "additionalProperties": true

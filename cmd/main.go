@@ -20,6 +20,10 @@ func main() {
 
 	env := app.Env
 
+	if env.AppEnv == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	db := app.Mongo.Database(env.DBName)
 	defer app.CloseDBConnection()
 

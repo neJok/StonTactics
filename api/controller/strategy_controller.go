@@ -108,18 +108,18 @@ func (sc *StrategyController) FetchOne(c *gin.Context) {
 }
 
 // Update	godoc
-// @Summary		Обновить parts стратегии
+// @Summary		Обновить стратегию
 // @Tags        Strategy
 // @Router      /api/strategy/{id} [put]
 // @Success		200		{object}	nil
 // @Failure		400		{object}	domain.ErrorResponse
 // @Param       id		path	string	true	"id"
-// @Param       parts	body	domain.StrategyUpdateRequest	true	"parts"
+// @Param       update	body	domain.StrategyUpdateRequest	true	"update"
 // @Produce		json
 // @Security 	Bearer
 func (sc *StrategyController) Update(c *gin.Context) {
-	var strategyRequest domain.StrategyUpdateRequest
-	err := c.ShouldBindBodyWith(&strategyRequest, binding.JSON)
+	var strategyUpdateRequest domain.StrategyUpdateRequest
+	err := c.ShouldBindBodyWith(&strategyUpdateRequest, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -127,7 +127,7 @@ func (sc *StrategyController) Update(c *gin.Context) {
 
 	id := c.Param("id")
 
-	err = sc.StrategyUsecase.Update(c, id, strategyRequest.Parts)
+	err = sc.StrategyUsecase.Update(c, id, strategyUpdateRequest.Parts, strategyUpdateRequest.MapName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return

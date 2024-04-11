@@ -329,7 +329,7 @@ const docTemplate = `{
                 "tags": [
                     "Spreading"
                 ],
-                "summary": "Обновить elements раскидки",
+                "summary": "Обновить раскидку",
                 "parameters": [
                     {
                         "type": "string",
@@ -339,8 +339,8 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "parts",
-                        "name": "parts",
+                        "description": "update",
+                        "name": "update",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -494,7 +494,7 @@ const docTemplate = `{
                 "tags": [
                     "Strategy"
                 ],
-                "summary": "Обновить parts стратегии",
+                "summary": "Обновить стратегию",
                 "parameters": [
                     {
                         "type": "string",
@@ -504,8 +504,8 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "parts",
-                        "name": "parts",
+                        "description": "update",
+                        "name": "update",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -746,7 +746,8 @@ const docTemplate = `{
         "domain.SpreadingUpdateRequest": {
             "type": "object",
             "required": [
-                "elements"
+                "elements",
+                "map_name"
             ],
             "properties": {
                 "elements": {
@@ -755,6 +756,9 @@ const docTemplate = `{
                         "type": "object",
                         "additionalProperties": true
                     }
+                },
+                "map_name": {
+                    "type": "string"
                 }
             }
         },
@@ -810,9 +814,13 @@ const docTemplate = `{
         "domain.StrategyUpdateRequest": {
             "type": "object",
             "required": [
+                "map_name",
                 "parts"
             ],
             "properties": {
+                "map_name": {
+                    "type": "string"
+                },
                 "parts": {
                     "type": "object",
                     "additionalProperties": true

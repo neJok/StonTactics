@@ -124,8 +124,11 @@ definitions:
           additionalProperties: true
           type: object
         type: array
+      map_name:
+        type: string
     required:
     - elements
+    - map_name
     type: object
   domain.Strategy:
     properties:
@@ -165,10 +168,13 @@ definitions:
     type: object
   domain.StrategyUpdateRequest:
     properties:
+      map_name:
+        type: string
       parts:
         additionalProperties: true
         type: object
     required:
+    - map_name
     - parts
     type: object
   domain.SuccessResponse:
@@ -372,9 +378,9 @@ paths:
         name: id
         required: true
         type: string
-      - description: parts
+      - description: update
         in: body
-        name: parts
+        name: update
         required: true
         schema:
           $ref: '#/definitions/domain.SpreadingUpdateRequest'
@@ -389,7 +395,7 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Обновить elements раскидки
+      summary: Обновить раскидку
       tags:
       - Spreading
   /api/strategy:
@@ -474,9 +480,9 @@ paths:
         name: id
         required: true
         type: string
-      - description: parts
+      - description: update
         in: body
-        name: parts
+        name: update
         required: true
         schema:
           $ref: '#/definitions/domain.StrategyUpdateRequest'
@@ -491,7 +497,7 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Обновить parts стратегии
+      summary: Обновить стратегию
       tags:
       - Strategy
   /refresh:

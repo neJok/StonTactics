@@ -22,14 +22,14 @@ type SpreadingRepository interface {
 	Create(c context.Context, spreading *Spreading) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
-	Update(c context.Context, id string, elements []map[string]interface{}) error
+	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
 }
 
 type SpreadingUsecase interface {
 	Create(c context.Context, spreading *Spreading) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
-	Update(c context.Context, id string, elements []map[string]interface{}) error
+	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
 }
 
 type SpreadingResponse struct {
@@ -46,4 +46,5 @@ type SpreadingCreateRequest struct {
 
 type SpreadingUpdateRequest struct {
 	Elements []map[string]interface{} `bson:"elements" form:"elements" binding:"required" json:"elements"`
+	MapName string               `bson:"map_name" form:"map_name" binding:"required" json:"map_name"`
 }

@@ -37,8 +37,8 @@ func (su *strategyUsecase) FetchByID(c context.Context, id string) (domain.Strat
 	return su.strategyRepository.FetchByID(ctx, id)
 }
 
-func (su *strategyUsecase) Update(c context.Context, id string, parts map[string]interface{}) error {
+func (su *strategyUsecase) Update(c context.Context, id string, parts map[string]interface{}, mapName string) error {
 	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
 	defer cancel()
-	return su.strategyRepository.Update(ctx, id, parts)
+	return su.strategyRepository.Update(ctx, id, parts, mapName)
 }
