@@ -713,7 +713,8 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 }
             }
         },
@@ -739,7 +740,8 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 }
             }
         },
@@ -758,7 +760,9 @@ const docTemplate = `{
                     }
                 },
                 "map_name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
                 }
             }
         },
@@ -780,7 +784,8 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 },
                 "parts": {
                     "type": "object",
@@ -819,7 +824,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "map_name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
                 },
                 "parts": {
                     "type": "object",

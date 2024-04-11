@@ -12,7 +12,7 @@ const (
 
 type Strategy struct {
 	ID      primitive.ObjectID     `bson:"_id" json:"id" binding:"-" form:"-"`
-	Name    string                 `bson:"name" form:"name" binding:"required,max=100" json:"name"`
+	Name    string                 `bson:"name" form:"name" binding:"required,max=100,min=1" json:"name"`
 	Parts   map[string]interface{} `bson:"parts" form:"parts" binding:"required" json:"parts"`
 	MapName string                 `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 	UserID  string                 `bson:"user_id" json:"-" form:"-"`
@@ -39,12 +39,12 @@ type StrategyResponse struct {
 }
 
 type StrategyCreateRequest struct {
-	Name    string                 `bson:"name" form:"name" binding:"required,max=100" json:"name"`
+	Name    string                 `bson:"name" form:"name" binding:"required,max=100,min1" json:"name"`
 	Parts   map[string]interface{} `bson:"parts" form:"parts" binding:"required" json:"parts"`
 	MapName string                 `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }
 
 type StrategyUpdateRequest struct {
 	Parts map[string]interface{} `bson:"parts" form:"parts" binding:"required" json:"parts"`
-	MapName string               `bson:"map_name" form:"map_name" binding:"required" json:"map_name"`
+	MapName string               `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }

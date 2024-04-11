@@ -703,7 +703,8 @@
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 }
             }
         },
@@ -729,7 +730,8 @@
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 }
             }
         },
@@ -748,7 +750,9 @@
                     }
                 },
                 "map_name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
                 }
             }
         },
@@ -770,7 +774,8 @@
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 },
                 "parts": {
                     "type": "object",
@@ -809,7 +814,9 @@
             ],
             "properties": {
                 "map_name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
                 },
                 "parts": {
                     "type": "object",

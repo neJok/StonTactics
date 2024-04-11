@@ -12,7 +12,7 @@ const (
 
 type Spreading struct {
 	ID       primitive.ObjectID       `bson:"_id" json:"id" binding:"-"`
-	Name     string                   `bson:"name" form:"name" binding:"required,max=100" json:"name"`
+	Name     string                   `bson:"name" form:"name" binding:"required,max=100,min=1" json:"name"`
 	Elements []map[string]interface{} `bson:"elements" form:"elements" binding:"required" json:"elements"`
 	MapName  string                   `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 	UserID   string                   `bson:"user_id" json:"-"`
@@ -39,12 +39,12 @@ type SpreadingResponse struct {
 }
 
 type SpreadingCreateRequest struct {
-	Name     string                   `bson:"name" form:"name" binding:"required,max=100" json:"name"`
+	Name     string                   `bson:"name" form:"name" binding:"required,max=100,min=1" json:"name"`
 	Elements []map[string]interface{} `bson:"elements" form:"elements" binding:"required" json:"elements"`
 	MapName  string                   `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }
 
 type SpreadingUpdateRequest struct {
 	Elements []map[string]interface{} `bson:"elements" form:"elements" binding:"required" json:"elements"`
-	MapName string               `bson:"map_name" form:"map_name" binding:"required" json:"map_name"`
+	MapName string               `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }
