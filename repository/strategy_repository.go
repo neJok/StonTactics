@@ -83,3 +83,10 @@ func (sr *strategyRepository) Update(c context.Context, id string, parts map[str
 	_, err = collection.UpdateOne(c, bson.M{"_id": idHex}, bson.M{"$set": bson.M{"parts": parts, "map_name": mapName}})
 	return err
 }
+
+func (sr *strategyRepository) GetCount(c context.Context, userID string) int64 {
+	collection := sr.database.Collection(sr.collection)
+
+	count, _ := collection.CountDocuments(c, bson.M{"user_id": userID})
+	return count
+}

@@ -23,6 +23,7 @@ type SpreadingRepository interface {
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
 	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
+	GetCount(c context.Context, userID string) int64
 }
 
 type SpreadingUsecase interface {
@@ -30,6 +31,7 @@ type SpreadingUsecase interface {
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
 	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
+	GetCount(c context.Context, userID string) int64
 }
 
 type SpreadingResponse struct {

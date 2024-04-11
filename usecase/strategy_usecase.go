@@ -42,3 +42,9 @@ func (su *strategyUsecase) Update(c context.Context, id string, parts map[string
 	defer cancel()
 	return su.strategyRepository.Update(ctx, id, parts, mapName)
 }
+
+func (su *strategyUsecase) GetCount(c context.Context, userID string) int64 {
+	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+	defer cancel()
+	return su.strategyRepository.GetCount(ctx, userID)
+}

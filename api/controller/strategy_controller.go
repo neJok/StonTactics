@@ -11,6 +11,7 @@ import (
 
 type StrategyController struct {
 	StrategyUsecase domain.StrategyUsecase
+	ProfileUsecase domain.ProfileUsecase
 }
 
 // Create		godoc
@@ -31,6 +32,17 @@ func (sc *StrategyController) Create(c *gin.Context) {
 	}
 
 	userID := c.GetString("x-user-id")
+	user, err := sc.ProfileUsecase.GetProfileByID(c, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	countDocs := sc.StrategyUsecase.GetCount(c, userID)
+	if (!user.Pro && countDocs >= 5) {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "You can't upload new strategy without the pro version"})
+		return
+	}
 
 	strategy := domain.Strategy{
 		ID:      primitive.NewObjectID(),

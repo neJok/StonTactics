@@ -23,6 +23,7 @@ type StrategyRepository interface {
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
 	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
+	GetCount(c context.Context, userID string) int64
 }
 
 type StrategyUsecase interface {
@@ -30,6 +31,7 @@ type StrategyUsecase interface {
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
 	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
+	GetCount(c context.Context, userID string) int64
 }
 
 type StrategyResponse struct {

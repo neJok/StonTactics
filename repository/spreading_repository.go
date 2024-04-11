@@ -83,3 +83,10 @@ func (sr *spreadingRepository) Update(c context.Context, id string, elements []m
 	_, err = collection.UpdateOne(c, bson.M{"_id": idHex}, bson.M{"$set": bson.M{"elements": elements, "map_name": mapName}})
 	return err
 }
+
+func (sr *spreadingRepository) GetCount(c context.Context, userID string) int64 {
+	collection := sr.database.Collection(sr.collection)
+
+	count, _ := collection.CountDocuments(c, bson.M{"user_id": userID})
+	return count
+}

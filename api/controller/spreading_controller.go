@@ -11,6 +11,7 @@ import (
 
 type SpreadingController struct {
 	SpreadingUsecase domain.SpreadingUsecase
+	ProfileUsecase domain.ProfileUsecase
 }
 
 // Create		godoc
@@ -31,6 +32,18 @@ func (sc *SpreadingController) Create(c *gin.Context) {
 	}
 
 	userID := c.GetString("x-user-id")
+	user, err := sc.ProfileUsecase.GetProfileByID(c, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	countDocs := sc.SpreadingUsecase.GetCount(c, userID)
+	if (!user.Pro && countDocs >= 5) {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "You can't upload new spreading without the pro version"})
+		return
+	}
+
 	spreading := domain.Spreading{
 		ID:       primitive.NewObjectID(),
 		Name:     spreadingRequest.Name,

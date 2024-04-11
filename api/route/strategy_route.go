@@ -13,8 +13,10 @@ import (
 
 func NewStrategyRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
 	sr := repository.NewStrategyRepository(db, domain.CollectionStrategies)
+	pr := repository.NewUserRepository(db, domain.CollectionUser)
 	sc := &controller.StrategyController{
 		StrategyUsecase: usecase.NewStrategyUsecase(sr, timeout),
+		ProfileUsecase: usecase.NewProfileUsecase(pr, timeout),
 	}
 	group.GET("/strategy", sc.FetchMany)
 	group.POST("/strategy", sc.Create)

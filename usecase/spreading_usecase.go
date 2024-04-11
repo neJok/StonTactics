@@ -42,3 +42,9 @@ func (su *spreadingUsecase) Update(c context.Context, id string, elements []map[
 	defer cancel()
 	return su.spreadingRepository.Update(ctx, id, elements, mapName)
 }
+
+func (su *spreadingUsecase) GetCount(c context.Context, userID string) int64 {
+	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+	defer cancel()
+	return su.spreadingRepository.GetCount(ctx, userID)
+}
