@@ -58,3 +58,10 @@ func (ur *userRepository) UpdateMetaData(c context.Context, id string, name stri
 	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"name": name, "avatar_url": avatarUrl}})
 	return err
 }
+
+func (ur *userRepository) ActivatePro(c context.Context, id string, until *time.Time) error {
+	collection := ur.database.Collection(ur.collection)
+
+	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"pro.active": true, "pro.until": until}})
+	return err
+}

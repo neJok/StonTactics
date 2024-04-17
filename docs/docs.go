@@ -172,6 +172,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/payment/create/tinkoff": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Создать платеж",
+                "parameters": [
+                    {
+                        "description": "paymentInfo",
+                        "name": "paymentInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.PaymentCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.PaymentCreated"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/profile": {
             "get": {
                 "security": [
@@ -646,6 +687,30 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.PaymentCreateRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "days": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 3
+                }
+            }
+        },
+        "domain.PaymentCreated": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.Profile": {
             "type": "object",
             "properties": {
@@ -808,7 +873,8 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "minLength": 1
                 },
                 "parts": {
                     "type": "object",

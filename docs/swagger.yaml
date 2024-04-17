@@ -50,6 +50,22 @@ definitions:
     required:
     - name
     type: object
+  domain.PaymentCreateRequest:
+    properties:
+      days:
+        type: string
+      email:
+        maxLength: 256
+        minLength: 3
+        type: string
+    required:
+    - email
+    type: object
+  domain.PaymentCreated:
+    properties:
+      url:
+        type: string
+    type: object
   domain.Profile:
     properties:
       avatar_url:
@@ -162,6 +178,7 @@ definitions:
         type: string
       name:
         maxLength: 100
+        minLength: 1
         type: string
       parts:
         additionalProperties: true
@@ -289,6 +306,31 @@ paths:
       summary: Добавить стратегию в папку
       tags:
       - Folder
+  /api/payment/create/tinkoff:
+    post:
+      parameters:
+      - description: paymentInfo
+        in: body
+        name: paymentInfo
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PaymentCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.PaymentCreated'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Создать платеж
+      tags:
+      - Payment
   /api/profile:
     get:
       produces:

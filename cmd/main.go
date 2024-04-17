@@ -19,6 +19,7 @@ func main() {
 	app := bootstrap.App()
 
 	env := app.Env
+	tinkoffClient := app.TinkoffClient
 
 	if env.AppEnv == "release" {
 		gin.SetMode(gin.ReleaseMode)
@@ -39,7 +40,7 @@ func main() {
 	}
 	server.Use(cors.New(corsConfig))
 
-	route.Setup(env, timeout, db, server)
+	route.Setup(env, timeout, db, server, tinkoffClient)
 
 	server.Run(":" + env.Port)
 }

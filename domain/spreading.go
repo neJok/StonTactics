@@ -48,5 +48,5 @@ type SpreadingCreateRequest struct {
 
 type SpreadingUpdateRequest struct {
 	Elements []map[string]interface{} `bson:"elements" form:"elements" binding:"required" json:"elements"`
-	MapName string               `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
+	MapName string               	  `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }

@@ -3,13 +3,15 @@ package route
 import (
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"stontactics/api/middleware"
 	"stontactics/bootstrap"
 	"stontactics/mongo"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nikita-vanyasin/tinkoff"
 )
 
-func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gin.Engine) {
+func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gin.Engine, tinkoffClient *tinkoff.Client) {
 	publicRouter := gin.Group("")
 	// All Public APIs
 	NewSwaggerRouter(publicRouter)
@@ -24,4 +26,5 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gi
 	NewStrategyRouter(env, timeout, db, protectedRouter)
 	NewFolderRouter(env, timeout, db, protectedRouter)
 	NewSpreadingRouter(env, timeout, db, protectedRouter)
+	NewPaymentRouter(env, timeout, db, protectedRouter, tinkoffClient)
 }
