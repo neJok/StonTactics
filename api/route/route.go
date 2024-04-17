@@ -26,5 +26,5 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gi
 	NewStrategyRouter(env, timeout, db, protectedRouter)
 	NewFolderRouter(env, timeout, db, protectedRouter)
 	NewSpreadingRouter(env, timeout, db, protectedRouter)
-	NewPaymentRouter(env, timeout, db, protectedRouter, tinkoffClient)
+	NewPaymentRouter(env, timeout, db, protectedRouter, publicRouter, tinkoffClient)
 }

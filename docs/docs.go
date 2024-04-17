@@ -690,11 +690,12 @@ const docTemplate = `{
         "domain.PaymentCreateRequest": {
             "type": "object",
             "required": [
+                "days",
                 "email"
             ],
             "properties": {
                 "days": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "email": {
                     "type": "string",

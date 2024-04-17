@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
 	"github.com/google/uuid"
-	
+
 	"stontactics/domain"
 
 	"github.com/gin-gonic/gin"
@@ -35,15 +36,13 @@ func (pc *PaymentController) CreateTinkoff(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-
-	prices := map[string]uint64 {
-		"30": 9900,
-		"90": 14900,
+	
+	prices := map[int16]uint64 {
+		30: 9900,
+		90: 14900,
 	}
 
-	if paymentRequest.Days == "" {
-		paymentRequest.Days = "30"
-	} else if _, ok := prices[paymentRequest.Days]; !ok {
+	if _, ok := prices[paymentRequest.Days]; !ok {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The days parameter was incorrectly passed, possible values: 30, 90"})
 		return
 	}
@@ -51,9 +50,9 @@ func (pc *PaymentController) CreateTinkoff(c *gin.Context) {
 	req := &tinkoff.InitRequest{
 		Amount:      prices[paymentRequest.Days],
 		OrderID:     uuid.New().String(),
-		RedirectDueDate: tinkoff.Time(time.Now().Add(4 * 24 * time.Hour)),
 		Receipt: &tinkoff.Receipt{
 			Email: paymentRequest.Email,
+			Taxation: tinkoff.TaxationUSNIncome,
 			Items: []*tinkoff.ReceiptItem{
 				{
 					Price:    prices[paymentRequest.Days],
@@ -63,21 +62,22 @@ func (pc *PaymentController) CreateTinkoff(c *gin.Context) {
 					Tax:      tinkoff.VAT20,
 				},
 			},
-			Taxation: tinkoff.TaxationUSNIncome,
-			Payments: &tinkoff.ReceiptPayments{
-				Electronic: prices[paymentRequest.Days],
-			},
 		},
-		Data: map[string]string{
-			"days": paymentRequest.Days,
-			"user_id": c.GetString("x-user-id"),
-		},
+		Data: map[string]string{"": "",},
 	}
 	res, err := pc.TinkoffClient.Init(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
+	
+	pc.PaymentUsecase.Create(c, &domain.Payment{
+		PaymentID: res.PaymentID,
+		UserID: c.GetString("x-user-id"),
+		Days: paymentRequest.Days,
+		Paid: false,
+	})
+
 	c.JSON(http.StatusCreated, domain.PaymentCreated{Url: res.PaymentURL})
 }
 
@@ -87,15 +87,29 @@ func (pc *PaymentController) CallbackTinkoff(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-	
-	if notification.Success {
-		days, err := strconv.Atoi(notification.Data["days"])
+
+	if notification.Success && notification.Status == "CONFIRMED" {
+		paymentID := strconv.Itoa(int(notification.PaymentID))
+		payment, err := pc.PaymentUsecase.GetByID(c, paymentID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 			return
 		}
-		until := time.Now().Add(time.Hour * 24 * time.Duration(days))
-		pc.PaymentUsecase.ActivatePro(c, notification.Data["user_id"], &until)
+
+		user, err := pc.PaymentUsecase.GetUser(c, payment.UserID)
+		if !payment.Paid && err == nil {
+			additional := time.Hour * 24 * time.Duration(payment.Days)
+			
+			var until time.Time
+			if user.Pro.Active {
+				until = user.Pro.Until.Add(additional)
+			} else {
+				until = time.Now().Add(additional)
+			}
+
+			pc.PaymentUsecase.ActivatePro(c, payment.UserID, &until)
+			pc.PaymentUsecase.SetPaid(c, paymentID)
+		}
 	}
 
 	c.String(http.StatusOK, pc.TinkoffClient.GetNotificationSuccessResponse())

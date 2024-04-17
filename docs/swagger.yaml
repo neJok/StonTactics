@@ -53,12 +53,13 @@ definitions:
   domain.PaymentCreateRequest:
     properties:
       days:
-        type: string
+        type: integer
       email:
         maxLength: 256
         minLength: 3
         type: string
     required:
+    - days
     - email
     type: object
   domain.PaymentCreated:
