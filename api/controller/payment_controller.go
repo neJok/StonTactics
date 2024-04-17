@@ -87,14 +87,16 @@ func (pc *PaymentController) CallbackTinkoff(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-
-	days, err := strconv.Atoi(notification.Data["days"])
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-		return
-    }
-	until := time.Now().Add(time.Hour * 24 * time.Duration(days))
-	pc.PaymentUsecase.ActivatePro(c, notification.Data["user_id"], &until)
+	
+	if notification.Success {
+		days, err := strconv.Atoi(notification.Data["days"])
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+			return
+		}
+		until := time.Now().Add(time.Hour * 24 * time.Duration(days))
+		pc.PaymentUsecase.ActivatePro(c, notification.Data["user_id"], &until)
+	}
 
 	c.String(http.StatusOK, pc.TinkoffClient.GetNotificationSuccessResponse())
 }
