@@ -20,5 +20,6 @@ func NewLoginRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database
 	}
 
 	group.GET("/auth/:provider", lc.BeginLogin)
-	group.GET("/auth/:provider/callback", lc.Login)
+	group.GET("/auth/:provider/callback", lc.Callback)
+	group.POST("/login", lc.LoginEmail)
 }

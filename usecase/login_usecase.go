@@ -2,10 +2,9 @@ package usecase
 
 import (
 	"context"
-	"time"
-
 	"stontactics/domain"
 	"stontactics/internal/tokenutil"
+	"time"
 )
 
 type loginUsecase struct {
@@ -20,28 +19,46 @@ func NewLoginUsecase(userRepository domain.UserRepository, timeout time.Duration
 	}
 }
 
-func (su *loginUsecase) Create(c context.Context, user *domain.User) error {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (lu *loginUsecase) Create(c context.Context, user *domain.User) (string, error) {
+	ctx, cancel := context.WithTimeout(c, lu.contextTimeout)
 	defer cancel()
-	return su.userRepository.Create(ctx, user)
+	return lu.userRepository.Create(ctx, user)
 }
 
-func (su *loginUsecase) GetUserByID(c context.Context, id string) (domain.User, error) {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (lu *loginUsecase) GetUserByID(c context.Context, id string) (domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, lu.contextTimeout)
 	defer cancel()
-	return su.userRepository.GetByID(ctx, id)
+	return lu.userRepository.GetByID(ctx, id)
 }
 
-func (su *loginUsecase) UpdateUser(c context.Context, id string, name string, avatarURL string) {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (lu *loginUsecase) UpdateUser(c context.Context, id string, name string, avatarURL string) {
+	ctx, cancel := context.WithTimeout(c, lu.contextTimeout)
 	defer cancel()
-	su.userRepository.UpdateMetaData(ctx, id, name, avatarURL)
+	lu.userRepository.UpdateMetaData(ctx, id, name, avatarURL)
 }
 
-func (su *loginUsecase) CreateAccessToken(user *domain.User, secret string, expiry int) (accessToken string, err error) {
+func (lu *loginUsecase) CreateAccessToken(user *domain.User, secret string, expiry int) (accessToken string, err error) {
 	return tokenutil.CreateAccessToken(user, secret, expiry)
 }
 
-func (su *loginUsecase) CreateRefreshToken(user *domain.User, secret string, expiry int) (refreshToken string, err error) {
+func (lu *loginUsecase) CreateRefreshToken(user *domain.User, secret string, expiry int) (refreshToken string, err error) {
 	return tokenutil.CreateRefreshToken(user, secret, expiry)
+}
+
+func (lu *loginUsecase) GetUserByGoogleID(c context.Context, id string) (domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, lu.contextTimeout)
+	defer cancel()
+	return lu.userRepository.GetUserByGoogleID(ctx, id)
+}
+
+func (lu *loginUsecase) GetUserByVKID(c context.Context, id string) (domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, lu.contextTimeout)
+	defer cancel()
+	return lu.userRepository.GetUserByVKID(ctx, id)
+}
+
+func (su *loginUsecase) GetUserByEmail(c context.Context, email string) (domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+	defer cancel()
+	return su.userRepository.GetUserByEmail(ctx, email)
 }

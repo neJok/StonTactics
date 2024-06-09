@@ -2,12 +2,17 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"stontactics/bootstrap"
 	"stontactics/domain"
 	"stontactics/internal/authutil"
 	"strconv"
+	"strings"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginController struct {
@@ -15,16 +20,16 @@ type LoginController struct {
 	Env          *bootstrap.Env
 }
 
-func (sc *LoginController) BeginLogin(c *gin.Context) {
+func (lc *LoginController) BeginLogin(c *gin.Context) {
 	provider := c.Param("provider")
 	oauthState := authutil.GenerateStateOauthCookie(c.Writer)
 
 	var url string
 	switch provider {
 	case "google":
-		url = authutil.GetConfigGoogle(sc.Env).AuthCodeURL(oauthState)
+		url = authutil.GetConfigGoogle(lc.Env).AuthCodeURL(oauthState)
 	case "vk":
-		url = authutil.GetConfigVK(sc.Env).AuthCodeURL(oauthState)
+		url = authutil.GetConfigVK(lc.Env).AuthCodeURL(oauthState)
 	default:
 		c.String(http.StatusInternalServerError, "Invalid provider")
 		return
@@ -32,7 +37,7 @@ func (sc *LoginController) BeginLogin(c *gin.Context) {
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
-func (sc *LoginController) Login(c *gin.Context) {
+func (lc *LoginController) Callback(c *gin.Context) {
 	provider := c.Param("provider")
 
 	// Проверка валидности провайдера
@@ -59,10 +64,12 @@ func (sc *LoginController) Login(c *gin.Context) {
 	}
 
 	var user domain.User
+	var userEntry domain.User
+	
 	switch provider {
 	case "google":
 		// Получение данных от Google
-		data, err := authutil.GetUserDataFromGoogle(sc.Env, c.Query("code"))
+		data, err := authutil.GetUserDataFromGoogle(lc.Env, c.Query("code"))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 			return
@@ -74,19 +81,32 @@ func (sc *LoginController) Login(c *gin.Context) {
 			return
 		}
 
-		user = domain.User{
-			ID:        data.ID,
+		now := time.Now()
+		userEntry = domain.User{
+			ID:        "",
 			Name:      data.Name,
-			Email:     data.Email,
 			AvatarURL: data.Picture,
 			Pro: domain.UserPro{
 				Active: false,
 				Until:  nil,
 			},
+			Auth: domain.UserAuth{
+				Email: domain.EmailAuth{},
+				Google: domain.SocialAuth{
+					ID: data.ID,
+				},
+				VK: domain.SocialAuth{},
+			},
+			CreatedAt: &now,
+		}
+
+		dbUser, err := lc.LoginUsecase.GetUserByGoogleID(c, userEntry.Auth.Google.ID)
+		if (err != nil) {
+			user = dbUser
 		}
 	case "vk":
 		// Получение данных от VK
-		data, err := authutil.GetUserDataFromVK(sc.Env, c.Query("code"))
+		data, err := authutil.GetUserDataFromVK(lc.Env, c.Query("code"))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 			return
@@ -98,29 +118,44 @@ func (sc *LoginController) Login(c *gin.Context) {
 			return
 		}
 
-		user = domain.User{
-			ID:        strconv.Itoa(data.ID),
+		now := time.Now()
+		userEntry = domain.User{
+			ID:        "",
 			Name:      data.FirstName + " " + data.LastName,
-			Email:     data.Email,
 			AvatarURL: data.Photo200,
+			Pro: domain.UserPro{
+				Active: false,
+				Until:  nil,
+			},
+			Auth: domain.UserAuth{
+				Email: domain.EmailAuth{},
+				Google: domain.SocialAuth{},
+				VK: domain.SocialAuth{
+					ID: strconv.Itoa(data.ID),
+				},
+			},
+			CreatedAt: &now,
+		}
+
+		dbUser, err := lc.LoginUsecase.GetUserByVKID(c, userEntry.Auth.VK.ID)
+		if (err != nil) {
+			user = dbUser
 		}
 	default:
 		c.String(http.StatusInternalServerError, "Invalid provider")
 		return
 	}
 
-	// Получение пользователя из базы данных
-	dbUser, err := sc.LoginUsecase.GetUserByID(c, user.ID)
 	var accessToken, refreshToken string
-	if err == nil {
+	if user.ID != "" {
 		// Обновление данных пользователя, если они изменились
-		if dbUser.Name != user.Name || dbUser.AvatarURL != user.AvatarURL {
-			sc.LoginUsecase.UpdateUser(c, user.ID, user.Name, user.AvatarURL)
+		if userEntry.Name != user.Name || userEntry.AvatarURL != user.AvatarURL {
+			lc.LoginUsecase.UpdateUser(c, user.ID, user.Name, user.AvatarURL)
 		}
-		user = dbUser
 	} else {
 		// Создание нового пользователя, если его нет в базе данных
-		err = sc.LoginUsecase.Create(c, &user)
+		user = userEntry
+		user.ID, err = lc.LoginUsecase.Create(c, &user)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 			return
@@ -128,18 +163,60 @@ func (sc *LoginController) Login(c *gin.Context) {
 	}
 
 	// Создание токенов доступа и обновления
-	accessToken, err = sc.LoginUsecase.CreateAccessToken(&user, sc.Env.AccessTokenSecret, sc.Env.AccessTokenExpiryHour)
+	accessToken, err = lc.LoginUsecase.CreateAccessToken(&user, lc.Env.AccessTokenSecret, lc.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	refreshToken, err = sc.LoginUsecase.CreateRefreshToken(&user, sc.Env.RefreshTokenSecret, sc.Env.RefreshTokenExpiryHour)
+	refreshToken, err = lc.LoginUsecase.CreateRefreshToken(&user, lc.Env.RefreshTokenSecret, lc.Env.RefreshTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	// Перенаправление пользователя на фронтенд с токенами
-	c.Redirect(http.StatusFound, fmt.Sprintf("%s/callback?accessToken=%s&refreshToken=%s", sc.Env.FrontendAddress, accessToken, refreshToken))
+	c.Redirect(http.StatusFound, fmt.Sprintf("%s/callback?accessToken=%s&refreshToken=%s", lc.Env.FrontendAddress, accessToken, refreshToken))
+}
+
+
+// FetchOne	godoc
+// @Summary		Вход по почте и паролю
+// @Tags        Login
+// @Router      /login [post]
+// @Success		200		{object}	domain.RefreshTokenResponse
+// @Failure		400		{object}	domain.ErrorResponse
+// @Produce		json
+// @Security 	Bearer
+func (lc *LoginController) LoginEmail(c *gin.Context) {
+	var loginRequest domain.LoginRequest
+	err := c.ShouldBindBodyWith(&loginRequest, binding.JSON)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+	
+	email := strings.ToLower(loginRequest.Email)
+	user, err := lc.LoginUsecase.GetUserByEmail(c, email)
+	if err != nil || bcrypt.CompareHashAndPassword(user.Auth.Email.Password, []byte(loginRequest.Password)) != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "User not found"})
+		return
+	}
+
+	accessToken, err := lc.LoginUsecase.CreateAccessToken(&user, lc.Env.AccessTokenSecret, lc.Env.AccessTokenExpiryHour)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	refreshToken, err := lc.LoginUsecase.CreateRefreshToken(&user, lc.Env.RefreshTokenSecret, lc.Env.RefreshTokenExpiryHour)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.RefreshTokenResponse{
+		AccessToken: accessToken,
+		RefreshToken: refreshToken,
+	})
 }

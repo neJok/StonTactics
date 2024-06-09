@@ -1,13 +1,16 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type Profile struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	AvatarURl string `json:"avatar_url"`
-	Pro       bool   `json:"pro"`
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	AvatarURl string    `json:"avatar_url"`
+	Pro       UserPro   `json:"pro"`
+	CreatedAt *time.Time `json:"created_at"`
 }
 
 type ProfileUsecase interface {

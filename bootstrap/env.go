@@ -27,6 +27,8 @@ type Env struct {
 	VKClientSecret         	string `mapstructure:"VK_CLIENT_SECRET"`
 	TinkoffTerminalKey     	string `mapstructure:"TINKOFF_TERMINAL_KEY"`
 	TinkoffTerminalPassword	string `mapstructure:"TINKOFF_TERMINAL_PASSWORD"`
+	SmtpUsername			string `mapstructure:"SMTP_USERNAME"`
+	SmtpPassword			string `mapstructure:"SMTP_PASSWORD"`
 }
 
 func NewEnv() *Env {

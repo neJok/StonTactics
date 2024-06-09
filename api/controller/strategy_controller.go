@@ -1,17 +1,18 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"stontactics/domain"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type StrategyController struct {
 	StrategyUsecase domain.StrategyUsecase
-	ProfileUsecase domain.ProfileUsecase
+	ProfileUsecase  domain.ProfileUsecase
 }
 
 // Create		godoc
@@ -39,7 +40,7 @@ func (sc *StrategyController) Create(c *gin.Context) {
 	}
 
 	countDocs := sc.StrategyUsecase.GetCount(c, userID)
-	if (!user.Pro && countDocs >= 5) {
+	if !user.Pro.Active && countDocs >= 5 {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "You can't upload new strategy without the pro version"})
 		return
 	}

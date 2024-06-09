@@ -71,14 +71,14 @@ definitions:
     properties:
       avatar_url:
         type: string
-      email:
+      created_at:
         type: string
       id:
         type: string
       name:
         type: string
       pro:
-        type: boolean
+        $ref: '#/definitions/domain.UserPro'
     type: object
   domain.RefreshTokenRequest:
     properties:
@@ -205,6 +205,13 @@ definitions:
   domain.SuccessResponse:
     properties:
       message:
+        type: string
+    type: object
+  domain.UserPro:
+    properties:
+      active:
+        type: boolean
+      until:
         type: string
     type: object
 info:
@@ -550,6 +557,24 @@ paths:
       summary: Обновить стратегию
       tags:
       - Strategy
+  /login:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Вход по почте и паролю
+      tags:
+      - Login
   /refresh:
     post:
       parameters:
@@ -575,6 +600,42 @@ paths:
       summary: Обновить токены
       tags:
       - Refresh
+  /singup/comfirm:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Подтверждение почты
+      tags:
+      - Singup
+  /singup/register:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Регистрация по почте и паролю
+      tags:
+      - Singup
 securityDefinitions:
   Bearer:
     description: Type "Bearer" followed by a space and JWT token.

@@ -1,17 +1,18 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"stontactics/domain"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type SpreadingController struct {
 	SpreadingUsecase domain.SpreadingUsecase
-	ProfileUsecase domain.ProfileUsecase
+	ProfileUsecase   domain.ProfileUsecase
 }
 
 // Create		godoc
@@ -39,7 +40,7 @@ func (sc *SpreadingController) Create(c *gin.Context) {
 	}
 
 	countDocs := sc.SpreadingUsecase.GetCount(c, userID)
-	if (!user.Pro && countDocs >= 5) {
+	if !user.Pro.Active && countDocs >= 5 {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "You can't upload new spreading without the pro version"})
 		return
 	}
