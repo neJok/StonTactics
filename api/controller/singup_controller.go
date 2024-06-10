@@ -123,7 +123,7 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 
 	userEntry := domain.User{
 		ID:        "",
-		Name:      "Empty",
+		Name:      comfirmCodeRequest.Name,
 		AvatarURL: "",
 		Pro: domain.UserPro{
 			Active: false,

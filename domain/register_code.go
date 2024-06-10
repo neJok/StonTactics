@@ -18,8 +18,9 @@ type RegisterCode struct {
 }
 
 type ComfirmCodeRequest struct {
-	Email string `bson:"email"`
-	Code  int    `bson:"code"`
+	Name  string `bson:"name" form:"name" binding:"required,max=30,min=2" json:"name"`
+	Email string `bson:"email" form:"email" binding:"required,max=256,min=3" json:"email"`
+	Code  int    `bson:"code" form:"code" binding:"required" json:"code"`
 }
 
 type RegisterCodesRepository interface {
