@@ -53,7 +53,7 @@ func (sc *SignUpController) SignUp(c *gin.Context) {
 
 	lastRegisterCode, err := sc.SignUpUsecase.GetRegisterCode(c, email)
 	if err == nil {
-		codeWorkUntil := lastRegisterCode.CreatedAt.Add(15 * time.Minute)
+		codeWorkUntil := lastRegisterCode.CreatedAt.Add(time.Minute)
 		if now.Before(codeWorkUntil) {
 			c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Wait to create a new code"})
 			return
