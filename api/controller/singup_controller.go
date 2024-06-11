@@ -25,25 +25,25 @@ type SignUpController struct {
 // @Router      /signup/register [post]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       singUpRequest	body	domain.SignUpRequest	true	"sing up request"
+// @Param       signUpRequest	body	domain.SignUpRequest	true	"sign up request"
 // @Produce		json
 // @Security 	Bearer
 func (sc *SignUpController) SignUp(c *gin.Context) {
-	var singUpRequest domain.SignUpRequest
-	err := c.ShouldBindBodyWith(&singUpRequest, binding.JSON)
+	var signUpRequest domain.SignUpRequest
+	err := c.ShouldBindBodyWith(&signUpRequest, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	email := strings.ToLower(singUpRequest.Email)
+	email := strings.ToLower(signUpRequest.Email)
 	_, err = sc.SignUpUsecase.GetUserByEmail(c, email)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "User already exist"})
 		return
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(singUpRequest.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signUpRequest.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return

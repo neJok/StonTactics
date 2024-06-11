@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Test",
+        "title": "Ston Tactics",
         "contact": {}
     },
     "paths": {
@@ -696,8 +696,8 @@
                 "summary": "Регистрация по почте и паролю",
                 "parameters": [
                     {
-                        "description": "sing up request",
-                        "name": "singUpRequest",
+                        "description": "sign up request",
+                        "name": "signUpRequest",
                         "in": "body",
                         "required": true,
                         "schema": {

@@ -706,8 +706,8 @@ const docTemplate = `{
                 "summary": "Регистрация по почте и паролю",
                 "parameters": [
                     {
-                        "description": "sing up request",
-                        "name": "singUpRequest",
+                        "description": "sign up request",
+                        "name": "signUpRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -1120,7 +1120,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Test",
+	Title:            "Ston Tactics",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

@@ -260,7 +260,7 @@ definitions:
     type: object
 info:
   contact: {}
-  title: Test
+  title: Ston Tactics
 paths:
   /api/folder:
     get:
@@ -679,9 +679,9 @@ paths:
   /signup/register:
     post:
       parameters:
-      - description: sing up request
+      - description: sign up request
         in: body
-        name: singUpRequest
+        name: signUpRequest
         required: true
         schema:
           $ref: '#/definitions/domain.SignUpRequest'

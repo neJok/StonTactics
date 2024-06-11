@@ -10,7 +10,7 @@ import (
 	"stontactics/bootstrap"
 )
 
-// @title Test
+// @title Ston Tactics
 // @securityDefinitions.apikey Bearer
 // @in header
 // @name Authorization
