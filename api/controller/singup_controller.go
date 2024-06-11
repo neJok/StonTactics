@@ -19,13 +19,13 @@ type SingUpController struct {
 	Env           *bootstrap.Env
 }
 
-
 // FetchOne	godoc
 // @Summary		Регистрация по почте и паролю
 // @Tags        Singup
 // @Router      /singup/register [post]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
+// @Param       singUpRequest	body	domain.SingUpRequest	true	"sing up request"
 // @Produce		json
 // @Security 	Bearer
 func (sc *SingUpController) SingUp(c *gin.Context) {
@@ -35,7 +35,7 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-	
+
 	email := strings.ToLower(singUpRequest.Email)
 	_, err = sc.SingUpUsecase.GetUserByEmail(c, email)
 	if err == nil {
@@ -61,11 +61,11 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 	}
 
 	code := domain.RegisterCode{
-		Email: email,
-		Password: hashedPassword,
-		Code: random.RandRange(100000, 999999),
+		Email:     email,
+		Password:  hashedPassword,
+		Code:      random.RandRange(100000, 999999),
 		CreatedAt: &now,
-		Attempts: 10,
+		Attempts:  10,
 	}
 	sc.SingUpUsecase.CreateRegisterCode(c, &code)
 
@@ -85,6 +85,7 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 // @Router      /singup/comfirm [post]
 // @Success		200		{object}	domain.RefreshTokenResponse
 // @Failure		400		{object}	domain.ErrorResponse
+// @Param       codeRequest	body	domain.ComfirmCodeRequest	true	"code request"
 // @Produce		json
 // @Security 	Bearer
 func (sc *SingUpController) ComfirmCode(c *gin.Context) {
@@ -94,7 +95,7 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-	
+
 	email := strings.ToLower(comfirmCodeRequest.Email)
 	_, err = sc.SingUpUsecase.GetUserByEmail(c, email)
 	if err == nil {
@@ -115,7 +116,7 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 		return
 	}
 
-	if (comfirmCodeRequest.Code != registerCode.Code) {
+	if comfirmCodeRequest.Code != registerCode.Code {
 		sc.SingUpUsecase.IncAttemptsRegisterCode(c, email)
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The code does not match"})
 		return
@@ -131,11 +132,11 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 		},
 		Auth: domain.UserAuth{
 			Email: domain.EmailAuth{
-				Email: registerCode.Email,
+				Email:    registerCode.Email,
 				Password: registerCode.Password,
 			},
 			Google: domain.SocialAuth{},
-			VK: domain.SocialAuth{},
+			VK:     domain.SocialAuth{},
 		},
 		CreatedAt: &now,
 	}
@@ -159,7 +160,7 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, domain.RefreshTokenResponse{
-		AccessToken: accessToken,
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})
 }

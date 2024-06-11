@@ -186,6 +186,7 @@ func (lc *LoginController) Callback(c *gin.Context) {
 // @Router      /login [post]
 // @Success		200		{object}	domain.RefreshTokenResponse
 // @Failure		400		{object}	domain.ErrorResponse
+// @Param       loginRequest	body	domain.LoginRequest	true	"login request"
 // @Produce		json
 // @Security 	Bearer
 func (lc *LoginController) LoginEmail(c *gin.Context) {

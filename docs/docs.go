@@ -581,6 +581,17 @@ const docTemplate = `{
                     "Login"
                 ],
                 "summary": "Вход по почте и паролю",
+                "parameters": [
+                    {
+                        "description": "login request",
+                        "name": "loginRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.LoginRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -652,6 +663,17 @@ const docTemplate = `{
                     "Singup"
                 ],
                 "summary": "Подтверждение почты",
+                "parameters": [
+                    {
+                        "description": "code request",
+                        "name": "codeRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.ComfirmCodeRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -682,6 +704,17 @@ const docTemplate = `{
                     "Singup"
                 ],
                 "summary": "Регистрация по почте и паролю",
+                "parameters": [
+                    {
+                        "description": "sing up request",
+                        "name": "singUpRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SingUpRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -700,6 +733,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.ComfirmCodeRequest": {
+            "type": "object",
+            "required": [
+                "code",
+                "email",
+                "name"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 3
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "minLength": 2
+                }
+            }
+        },
         "domain.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -777,6 +833,24 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 100
+                }
+            }
+        },
         "domain.PaymentCreateRequest": {
             "type": "object",
             "required": [
@@ -841,6 +915,25 @@ const docTemplate = `{
                 },
                 "refreshToken": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.SingUpRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 8
                 }
             }
         },

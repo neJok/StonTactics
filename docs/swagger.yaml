@@ -1,4 +1,21 @@
 definitions:
+  domain.ComfirmCodeRequest:
+    properties:
+      code:
+        type: integer
+      email:
+        maxLength: 256
+        minLength: 3
+        type: string
+      name:
+        maxLength: 30
+        minLength: 2
+        type: string
+    required:
+    - code
+    - email
+    - name
+    type: object
   domain.ErrorResponse:
     properties:
       message:
@@ -50,6 +67,19 @@ definitions:
     required:
     - name
     type: object
+  domain.LoginRequest:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 1
+        type: string
+      password:
+        maxLength: 100
+        type: string
+    required:
+    - email
+    - password
+    type: object
   domain.PaymentCreateRequest:
     properties:
       days:
@@ -93,6 +123,20 @@ definitions:
         type: string
       refreshToken:
         type: string
+    type: object
+  domain.SingUpRequest:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 1
+        type: string
+      password:
+        maxLength: 100
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
     type: object
   domain.Spreading:
     properties:
@@ -559,6 +603,13 @@ paths:
       - Strategy
   /login:
     post:
+      parameters:
+      - description: login request
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LoginRequest'
       produces:
       - application/json
       responses:
@@ -602,6 +653,13 @@ paths:
       - Refresh
   /singup/comfirm:
     post:
+      parameters:
+      - description: code request
+        in: body
+        name: codeRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ComfirmCodeRequest'
       produces:
       - application/json
       responses:
@@ -620,6 +678,13 @@ paths:
       - Singup
   /singup/register:
     post:
+      parameters:
+      - description: sing up request
+        in: body
+        name: singUpRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SingUpRequest'
       produces:
       - application/json
       responses:
