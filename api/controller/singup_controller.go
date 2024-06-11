@@ -82,21 +82,21 @@ func (sc *SignUpController) SignUp(c *gin.Context) {
 // FetchOne	godoc
 // @Summary		Подтверждение почты
 // @Tags        Signup
-// @Router      /signup/comfirm [post]
+// @Router      /signup/confirm [post]
 // @Success		200		{object}	domain.RefreshTokenResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       codeRequest	body	domain.ComfirmCodeRequest	true	"code request"
+// @Param       codeRequest	body	domain.ConfirmCodeRequest	true	"code request"
 // @Produce		json
 // @Security 	Bearer
-func (sc *SignUpController) ComfirmCode(c *gin.Context) {
-	var comfirmCodeRequest domain.ComfirmCodeRequest
-	err := c.ShouldBindBodyWith(&comfirmCodeRequest, binding.JSON)
+func (sc *SignUpController) ConfirmCode(c *gin.Context) {
+	var confirmCodeRequest domain.ConfirmCodeRequest
+	err := c.ShouldBindBodyWith(&confirmCodeRequest, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	email := strings.ToLower(comfirmCodeRequest.Email)
+	email := strings.ToLower(confirmCodeRequest.Email)
 	_, err = sc.SignUpUsecase.GetUserByEmail(c, email)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "User already exist"})
@@ -116,7 +116,7 @@ func (sc *SignUpController) ComfirmCode(c *gin.Context) {
 		return
 	}
 
-	if comfirmCodeRequest.Code != registerCode.Code {
+	if confirmCodeRequest.Code != registerCode.Code {
 		sc.SignUpUsecase.IncAttemptsRegisterCode(c, email)
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The code does not match"})
 		return
@@ -124,7 +124,7 @@ func (sc *SignUpController) ComfirmCode(c *gin.Context) {
 
 	userEntry := domain.User{
 		ID:        "",
-		Name:      comfirmCodeRequest.Name,
+		Name:      confirmCodeRequest.Name,
 		AvatarURL: "",
 		Pro: domain.UserPro{
 			Active: false,
