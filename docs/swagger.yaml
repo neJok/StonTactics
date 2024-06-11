@@ -124,7 +124,7 @@ definitions:
       refreshToken:
         type: string
     type: object
-  domain.SingUpRequest:
+  domain.SignUpRequest:
     properties:
       email:
         maxLength: 100
@@ -651,7 +651,7 @@ paths:
       summary: Обновить токены
       tags:
       - Refresh
-  /singup/comfirm:
+  /signup/comfirm:
     post:
       parameters:
       - description: code request
@@ -675,8 +675,8 @@ paths:
       - Bearer: []
       summary: Подтверждение почты
       tags:
-      - Singup
-  /singup/register:
+      - Signup
+  /signup/register:
     post:
       parameters:
       - description: sing up request
@@ -684,7 +684,7 @@ paths:
         name: singUpRequest
         required: true
         schema:
-          $ref: '#/definitions/domain.SingUpRequest'
+          $ref: '#/definitions/domain.SignUpRequest'
       produces:
       - application/json
       responses:
@@ -700,7 +700,7 @@ paths:
       - Bearer: []
       summary: Регистрация по почте и паролю
       tags:
-      - Singup
+      - Signup
 securityDefinitions:
   Bearer:
     description: Type "Bearer" followed by a space and JWT token.

@@ -14,22 +14,22 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type SingUpController struct {
-	SingUpUsecase domain.SingUpUsecase
+type SignUpController struct {
+	SignUpUsecase domain.SignUpUsecase
 	Env           *bootstrap.Env
 }
 
 // FetchOne	godoc
 // @Summary		Регистрация по почте и паролю
-// @Tags        Singup
-// @Router      /singup/register [post]
+// @Tags        Signup
+// @Router      /signup/register [post]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       singUpRequest	body	domain.SingUpRequest	true	"sing up request"
+// @Param       singUpRequest	body	domain.SignUpRequest	true	"sing up request"
 // @Produce		json
 // @Security 	Bearer
-func (sc *SingUpController) SingUp(c *gin.Context) {
-	var singUpRequest domain.SingUpRequest
+func (sc *SignUpController) SignUp(c *gin.Context) {
+	var singUpRequest domain.SignUpRequest
 	err := c.ShouldBindBodyWith(&singUpRequest, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
@@ -37,7 +37,7 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 	}
 
 	email := strings.ToLower(singUpRequest.Email)
-	_, err = sc.SingUpUsecase.GetUserByEmail(c, email)
+	_, err = sc.SignUpUsecase.GetUserByEmail(c, email)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "User already exist"})
 		return
@@ -51,7 +51,7 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 
 	now := time.Now()
 
-	lastRegisterCode, err := sc.SingUpUsecase.GetRegisterCode(c, email)
+	lastRegisterCode, err := sc.SignUpUsecase.GetRegisterCode(c, email)
 	if err == nil {
 		codeWorkUntil := lastRegisterCode.CreatedAt.Add(15 * time.Minute)
 		if now.Before(codeWorkUntil) {
@@ -67,7 +67,7 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 		CreatedAt: &now,
 		Attempts:  10,
 	}
-	sc.SingUpUsecase.CreateRegisterCode(c, &code)
+	sc.SignUpUsecase.CreateRegisterCode(c, &code)
 
 	data := make(map[string]interface{}, 0)
 	subject := "Регистрация Ston Tactics"
@@ -81,14 +81,14 @@ func (sc *SingUpController) SingUp(c *gin.Context) {
 
 // FetchOne	godoc
 // @Summary		Подтверждение почты
-// @Tags        Singup
-// @Router      /singup/comfirm [post]
+// @Tags        Signup
+// @Router      /signup/comfirm [post]
 // @Success		200		{object}	domain.RefreshTokenResponse
 // @Failure		400		{object}	domain.ErrorResponse
 // @Param       codeRequest	body	domain.ComfirmCodeRequest	true	"code request"
 // @Produce		json
 // @Security 	Bearer
-func (sc *SingUpController) ComfirmCode(c *gin.Context) {
+func (sc *SignUpController) ComfirmCode(c *gin.Context) {
 	var comfirmCodeRequest domain.ComfirmCodeRequest
 	err := c.ShouldBindBodyWith(&comfirmCodeRequest, binding.JSON)
 	if err != nil {
@@ -97,13 +97,13 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 	}
 
 	email := strings.ToLower(comfirmCodeRequest.Email)
-	_, err = sc.SingUpUsecase.GetUserByEmail(c, email)
+	_, err = sc.SignUpUsecase.GetUserByEmail(c, email)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "User already exist"})
 		return
 	}
 
-	registerCode, err := sc.SingUpUsecase.GetRegisterCode(c, email)
+	registerCode, err := sc.SignUpUsecase.GetRegisterCode(c, email)
 	if err != nil || registerCode.Attempts == 0 {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The code was not found"})
 		return
@@ -117,7 +117,7 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 	}
 
 	if comfirmCodeRequest.Code != registerCode.Code {
-		sc.SingUpUsecase.IncAttemptsRegisterCode(c, email)
+		sc.SignUpUsecase.IncAttemptsRegisterCode(c, email)
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The code does not match"})
 		return
 	}
@@ -141,19 +141,19 @@ func (sc *SingUpController) ComfirmCode(c *gin.Context) {
 		CreatedAt: &now,
 	}
 
-	userEntry.ID, err = sc.SingUpUsecase.CreateUser(c, &userEntry)
+	userEntry.ID, err = sc.SignUpUsecase.CreateUser(c, &userEntry)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	accessToken, err := sc.SingUpUsecase.CreateAccessToken(&userEntry, sc.Env.AccessTokenSecret, sc.Env.AccessTokenExpiryHour)
+	accessToken, err := sc.SignUpUsecase.CreateAccessToken(&userEntry, sc.Env.AccessTokenSecret, sc.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	refreshToken, err := sc.SingUpUsecase.CreateRefreshToken(&userEntry, sc.Env.RefreshTokenSecret, sc.Env.RefreshTokenExpiryHour)
+	refreshToken, err := sc.SignUpUsecase.CreateRefreshToken(&userEntry, sc.Env.RefreshTokenSecret, sc.Env.RefreshTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return

@@ -13,7 +13,7 @@ type singUpUsecase struct {
 	contextTimeout          time.Duration
 }
 
-func NewSingUpUsecase(userRepository domain.UserRepository, registerCodesRepository domain.RegisterCodesRepository, timeout time.Duration) domain.SingUpUsecase {
+func NewSignUpUsecase(userRepository domain.UserRepository, registerCodesRepository domain.RegisterCodesRepository, timeout time.Duration) domain.SignUpUsecase {
 	return &singUpUsecase{
 		userRepository:          userRepository,
 		registerCodesRepository: registerCodesRepository,

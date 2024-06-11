@@ -639,7 +639,7 @@
                 }
             }
         },
-        "/singup/comfirm": {
+        "/signup/comfirm": {
             "post": {
                 "security": [
                     {
@@ -650,7 +650,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Singup"
+                    "Signup"
                 ],
                 "summary": "Подтверждение почты",
                 "parameters": [
@@ -680,7 +680,7 @@
                 }
             }
         },
-        "/singup/register": {
+        "/signup/register": {
             "post": {
                 "security": [
                     {
@@ -691,7 +691,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Singup"
+                    "Signup"
                 ],
                 "summary": "Регистрация по почте и паролю",
                 "parameters": [
@@ -701,7 +701,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.SingUpRequest"
+                            "$ref": "#/definitions/domain.SignUpRequest"
                         }
                     }
                 ],
@@ -908,7 +908,7 @@
                 }
             }
         },
-        "domain.SingUpRequest": {
+        "domain.SignUpRequest": {
             "type": "object",
             "required": [
                 "email",

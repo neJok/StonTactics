@@ -649,7 +649,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/singup/comfirm": {
+        "/signup/comfirm": {
             "post": {
                 "security": [
                     {
@@ -660,7 +660,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Singup"
+                    "Signup"
                 ],
                 "summary": "Подтверждение почты",
                 "parameters": [
@@ -690,7 +690,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/singup/register": {
+        "/signup/register": {
             "post": {
                 "security": [
                     {
@@ -701,7 +701,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Singup"
+                    "Signup"
                 ],
                 "summary": "Регистрация по почте и паролю",
                 "parameters": [
@@ -711,7 +711,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.SingUpRequest"
+                            "$ref": "#/definitions/domain.SignUpRequest"
                         }
                     }
                 ],
@@ -918,7 +918,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.SingUpRequest": {
+        "domain.SignUpRequest": {
             "type": "object",
             "required": [
                 "email",
