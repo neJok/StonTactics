@@ -41,6 +41,7 @@ type User struct {
 type UserRepository interface {
 	Create(c context.Context, user *User) (string, error)
 	UpdateMetaData(c context.Context, id string, name string, avatarUrl string) error
+	UpdatePassword(c context.Context, id string, password []byte) error
 	ActivatePro(c context.Context, id string, until *time.Time) error
 	GetByID(c context.Context, id string) (User, error)
 

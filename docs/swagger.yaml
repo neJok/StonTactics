@@ -1,5 +1,5 @@
 definitions:
-  domain.ComfirmCodeRequest:
+  domain.ConfirmRegisterCodeRequest:
     properties:
       code:
         type: integer
@@ -123,6 +123,46 @@ definitions:
         type: string
       refreshToken:
         type: string
+    type: object
+  domain.ResetPassowrdCreate:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - email
+    type: object
+  domain.ResetPasswordConfirmRequest:
+    properties:
+      code:
+        type: integer
+      email:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - code
+    - email
+    type: object
+  domain.ResetPasswordRequest:
+    properties:
+      password:
+        maxLength: 100
+        minLength: 8
+        type: string
+      token:
+        type: string
+    required:
+    - password
+    - token
+    type: object
+  domain.ResetPasswordResponse:
+    properties:
+      token:
+        type: string
+    required:
+    - token
     type: object
   domain.SignUpRequest:
     properties:
@@ -621,8 +661,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      security:
-      - Bearer: []
       summary: Вход по почте и паролю
       tags:
       - Login
@@ -651,7 +689,52 @@ paths:
       summary: Обновить токены
       tags:
       - Refresh
-  /signup/comfirm:
+  /reset/password:
+    post:
+      parameters:
+      - description: create code request
+        in: body
+        name: createResetPasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ResetPassowrdCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Отправить запрос на смену пароля
+      tags:
+      - ResetPassword
+    put:
+      parameters:
+      - description: token and name request
+        in: body
+        name: tokenRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Смена пароля
+      tags:
+      - ResetPassword
+  /reset/password/confirm:
     post:
       parameters:
       - description: code request
@@ -659,7 +742,30 @@ paths:
         name: codeRequest
         required: true
         schema:
-          $ref: '#/definitions/domain.ComfirmCodeRequest'
+          $ref: '#/definitions/domain.ResetPasswordConfirmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ResetPasswordResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Подтверждение почты по коду
+      tags:
+      - ResetPassword
+  /signup/confirm:
+    post:
+      parameters:
+      - description: code request
+        in: body
+        name: codeRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ConfirmRegisterCodeRequest'
       produces:
       - application/json
       responses:
@@ -671,8 +777,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      security:
-      - Bearer: []
       summary: Подтверждение почты
       tags:
       - Signup
@@ -696,8 +800,6 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/domain.ErrorResponse'
-      security:
-      - Bearer: []
       summary: Регистрация по почте и паролю
       tags:
       - Signup

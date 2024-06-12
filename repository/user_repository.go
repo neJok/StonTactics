@@ -4,8 +4,8 @@ import (
 	"context"
 	"stontactics/domain"
 	"stontactics/mongo"
-	"time"
 	"strconv"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -111,5 +111,12 @@ func (ur *userRepository) ActivatePro(c context.Context, id string, until *time.
 	collection := ur.database.Collection(ur.collection)
 
 	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"pro.active": true, "pro.until": until}})
+	return err
+}
+
+func (ur *userRepository) UpdatePassword(c context.Context, id string, password []byte) error {
+	collection := ur.database.Collection(ur.collection)
+	
+	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth.email.password": password}})
 	return err
 }

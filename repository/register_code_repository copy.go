@@ -23,7 +23,7 @@ func NewRegisterCodeRepository(db mongo.Database, collection string) domain.Regi
 func (pr *registerCodeRepository) CreateRegisterCode(c context.Context, code *domain.RegisterCode) error {
 	collection := pr.database.Collection(pr.collection)
 
-	collection.DeleteMany(c, bson.M{})
+	collection.DeleteMany(c, bson.M{"email": code.Email})
 	_, err := collection.InsertOne(c, code)
 	return err
 }

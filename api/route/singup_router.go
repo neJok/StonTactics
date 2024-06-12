@@ -22,5 +22,5 @@ func NewSignUpRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Databas
 	}
 
 	group.POST("/signup/register", sc.SignUp)
-	group.POST("/signup/confirm", sc.ConfirmCode)
+	group.POST("/signup/confirm", sc.ConfirmSingUpCode)
 }

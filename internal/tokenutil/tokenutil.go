@@ -1,11 +1,14 @@
 package tokenutil
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"time"
 
-	jwt "github.com/golang-jwt/jwt/v4"
 	"stontactics/domain"
+
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 func CreateAccessToken(user *domain.User, secret string, expiry int) (accessToken string, err error) {
@@ -72,4 +75,12 @@ func ExtractIDFromToken(requestToken string, secret string) (string, error) {
 	}
 
 	return claims["id"].(string), nil
+}
+
+func GenerateSecureToken(length int) string {
+    b := make([]byte, length)
+    if _, err := rand.Read(b); err != nil {
+        return ""
+    }
+    return hex.EncodeToString(b)
 }

@@ -180,7 +180,7 @@ func (lc *LoginController) Callback(c *gin.Context) {
 }
 
 
-// FetchOne	godoc
+// LoginEmail	godoc
 // @Summary		Вход по почте и паролю
 // @Tags        Login
 // @Router      /login [post]
@@ -188,7 +188,6 @@ func (lc *LoginController) Callback(c *gin.Context) {
 // @Failure		400		{object}	domain.ErrorResponse
 // @Param       loginRequest	body	domain.LoginRequest	true	"login request"
 // @Produce		json
-// @Security 	Bearer
 func (lc *LoginController) LoginEmail(c *gin.Context) {
 	var loginRequest domain.LoginRequest
 	err := c.ShouldBindBodyWith(&loginRequest, binding.JSON)

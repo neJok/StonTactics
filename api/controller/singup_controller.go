@@ -19,7 +19,7 @@ type SignUpController struct {
 	Env           *bootstrap.Env
 }
 
-// FetchOne	godoc
+// SignUp	godoc
 // @Summary		Регистрация по почте и паролю
 // @Tags        Signup
 // @Router      /signup/register [post]
@@ -27,7 +27,6 @@ type SignUpController struct {
 // @Failure		400		{object}	domain.ErrorResponse
 // @Param       signUpRequest	body	domain.SignUpRequest	true	"sign up request"
 // @Produce		json
-// @Security 	Bearer
 func (sc *SignUpController) SignUp(c *gin.Context) {
 	var signUpRequest domain.SignUpRequest
 	err := c.ShouldBindBodyWith(&signUpRequest, binding.JSON)
@@ -79,17 +78,16 @@ func (sc *SignUpController) SignUp(c *gin.Context) {
 	c.JSON(http.StatusOK, domain.SuccessResponse{Message: "the code has been sent by email"})
 }
 
-// FetchOne	godoc
+// ConfirmCode	godoc
 // @Summary		Подтверждение почты
 // @Tags        Signup
 // @Router      /signup/confirm [post]
 // @Success		200		{object}	domain.RefreshTokenResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       codeRequest	body	domain.ConfirmCodeRequest	true	"code request"
+// @Param       codeRequest	body	domain.ConfirmRegisterCodeRequest	true	"code request"
 // @Produce		json
-// @Security 	Bearer
-func (sc *SignUpController) ConfirmCode(c *gin.Context) {
-	var confirmCodeRequest domain.ConfirmCodeRequest
+func (sc *SignUpController) ConfirmSingUpCode(c *gin.Context) {
+	var confirmCodeRequest domain.ConfirmRegisterCodeRequest
 	err := c.ShouldBindBodyWith(&confirmCodeRequest, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
