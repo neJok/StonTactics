@@ -126,7 +126,7 @@ func (rc *ResetPassowrdController) ConfirmResetCode(c *gin.Context) {
 // @Router      /reset/password [put]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       tokenRequest	body	domain.ResetPasswordRequest	true	"token and name request"
+// @Param       tokenRequest	body	domain.ResetPasswordRequest	true	"token and password"
 // @Produce		json
 func (rc *ResetPassowrdController) ResetPasswordToken(c *gin.Context) {
 	var resetPassowordRequest domain.ResetPasswordRequest

@@ -655,7 +655,7 @@ const docTemplate = `{
                 "summary": "Смена пароля",
                 "parameters": [
                     {
-                        "description": "token and name request",
+                        "description": "token and password",
                         "name": "tokenRequest",
                         "in": "body",
                         "required": true,
