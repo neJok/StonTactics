@@ -13,6 +13,8 @@ definitions:
         type: string
       pro:
         $ref: '#/definitions/domain.UserPro'
+      vk_id:
+        type: string
     type: object
   domain.ChangeEmailConfirmRequest:
     properties:

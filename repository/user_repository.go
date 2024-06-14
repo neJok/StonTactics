@@ -100,10 +100,10 @@ func (ur *userRepository) GetUserByEmail(c context.Context, email string) (domai
 }
 
 
-func (ur *userRepository) UpdateMetaData(c context.Context, id string, name string, avatarUrl string) error {
+func (ur *userRepository) Update(c context.Context, id string, data bson.M) error {
 	collection := ur.database.Collection(ur.collection)
 
-	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"name": name, "avatar_url": avatarUrl}})
+	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": data})
 	return err
 }
 
@@ -118,13 +118,6 @@ func (ur *userRepository) UpdatePassword(c context.Context, id string, password 
 	collection := ur.database.Collection(ur.collection)
 	
 	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth.email.password": password}})
-	return err
-}
-
-func (ur *userRepository) UpdateEmail(c context.Context, id string, email string) error {
-	collection := ur.database.Collection(ur.collection)
-	
-	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth.email.email": email}})
 	return err
 }
 

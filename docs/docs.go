@@ -980,6 +980,9 @@ const docTemplate = `{
                 },
                 "pro": {
                     "$ref": "#/definitions/domain.UserPro"
+                },
+                "vk_id": {
+                    "type": "string"
                 }
             }
         },

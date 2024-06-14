@@ -4,6 +4,8 @@ import (
 	"context"
 	"stontactics/domain"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type resetPassowrdUsecase struct {
@@ -29,7 +31,7 @@ func (ru *resetPassowrdUsecase) GetUserByEmail(c context.Context, email string) 
 func (ru *resetPassowrdUsecase) UpdatePassword(c context.Context, id string, password []byte) error {
 	ctx, cancel := context.WithTimeout(c, ru.contextTimeout)
 	defer cancel()
-	return ru.userRepository.UpdatePassword(ctx, id, password)
+	return ru.userRepository.Update(ctx, id, bson.M{"auth.email.password": password})
 }
 
 func (ru *resetPassowrdUsecase) CreateCode(c context.Context, code *domain.ResetPassword) error {

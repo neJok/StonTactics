@@ -970,6 +970,9 @@
                 },
                 "pro": {
                     "$ref": "#/definitions/domain.UserPro"
+                },
+                "vk_id": {
+                    "type": "string"
                 }
             }
         },

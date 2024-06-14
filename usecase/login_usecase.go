@@ -5,6 +5,8 @@ import (
 	"stontactics/domain"
 	"stontactics/internal/tokenutil"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type loginUsecase struct {
@@ -31,10 +33,10 @@ func (lu *loginUsecase) GetUserByID(c context.Context, id string) (domain.User, 
 	return lu.userRepository.GetByID(ctx, id)
 }
 
-func (lu *loginUsecase) UpdateUser(c context.Context, id string, name string, avatarURL string) {
+func (lu *loginUsecase) UpdateUser(c context.Context, id string, data bson.M) {
 	ctx, cancel := context.WithTimeout(c, lu.contextTimeout)
 	defer cancel()
-	lu.userRepository.UpdateMetaData(ctx, id, name, avatarURL)
+	lu.userRepository.Update(ctx, id, data)
 }
 
 func (lu *loginUsecase) CreateAccessToken(user *domain.User, secret string, expiry int) (accessToken string, err error) {
@@ -61,4 +63,10 @@ func (su *loginUsecase) GetUserByEmail(c context.Context, email string) (domain.
 	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
 	defer cancel()
 	return su.userRepository.GetUserByEmail(ctx, email)
+}
+
+func (su *loginUsecase) DeleteByID(c context.Context, id string) {
+	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+	defer cancel()
+	su.userRepository.DeleteByID(ctx, id)
 }

@@ -12,6 +12,7 @@ type Account struct {
 	AvatarURl string     `json:"avatar_url"`
 	Pro       UserPro    `json:"pro"`
 	CreatedAt *time.Time `json:"created_at"`
+	VKID      string     `json:"vk_id"`
 }
 
 type AccountUsecase interface {

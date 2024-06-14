@@ -6,13 +6,14 @@ import (
 	"stontactics/bootstrap"
 	"stontactics/domain"
 	"stontactics/internal/authutil"
-	// "stontactics/internal/tokenutil"
+	"stontactics/internal/tokenutil"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -162,21 +163,19 @@ func (lc *LoginController) Callback(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Invalid provider")
 		return
 	}
-
-	/* token, err := c.Cookie("token")
-	if err == nil {
-		userID, err := tokenutil.ExtractIDFromToken(token, lc.Env.AccessTokenSecret)
-		if err == nil {
-			tokenUser, err := lc.LoginUsecase.GetUserByID(c, userID)
-		}
-	}
- 	*/
-
+	
 	var accessToken, refreshToken string
-	if user.ID != "" {
-		// Обновление данных пользователя, если они изменились
+	
+	token, _ := c.Cookie("token")
+	userID, err := tokenutil.ExtractIDFromToken(token, lc.Env.AccessTokenSecret)
+	if err == nil && provider == "vk" && user.ID == "" {
+		tokenUser, err := lc.LoginUsecase.GetUserByID(c, userID)
+		if err == nil {
+			lc.LoginUsecase.UpdateUser(c, tokenUser.ID, bson.M{"auth.vk.id": userEntry.Auth.VK.ID, "avatar_url": userEntry.AvatarURL})
+		}
+	} else if user.ID != "" {
 		if userEntry.Name != user.Name || userEntry.AvatarURL != user.AvatarURL {
-			lc.LoginUsecase.UpdateUser(c, user.ID, user.Name, user.AvatarURL)
+			lc.LoginUsecase.UpdateUser(c, user.ID, bson.M{"name": user.Name, "avatar_url": user.AvatarURL})
 		}
 	} else {
 		// Создание нового пользователя, если его нет в базе данных

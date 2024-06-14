@@ -4,6 +4,8 @@ import (
 	"context"
 	"stontactics/domain"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type changeEmailUsecase struct {
@@ -35,7 +37,7 @@ func (cu *changeEmailUsecase) GetUserByEmail(c context.Context, email string) (d
 func (cu *changeEmailUsecase) UpdateEmail(c context.Context, id string, email string) error {
 	ctx, cancel := context.WithTimeout(c, cu.contextTimeout)
 	defer cancel()
-	return cu.userRepository.UpdateEmail(ctx, id, email)
+	return cu.userRepository.Update(ctx, id, bson.M{"auth.email.email": email})
 }
 
 func (cu *changeEmailUsecase) CreateCode(c context.Context, code *domain.ChangeEmail) error {
