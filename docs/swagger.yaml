@@ -1,4 +1,35 @@
 definitions:
+  domain.Account:
+    properties:
+      avatar_url:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      pro:
+        $ref: '#/definitions/domain.UserPro'
+    type: object
+  domain.ChangeEmailConfirmRequest:
+    properties:
+      code:
+        type: integer
+    required:
+    - code
+    type: object
+  domain.ChangeEmailCreate:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - email
+    type: object
   domain.ConfirmRegisterCodeRequest:
     properties:
       code:
@@ -96,19 +127,6 @@ definitions:
     properties:
       url:
         type: string
-    type: object
-  domain.Profile:
-    properties:
-      avatar_url:
-        type: string
-      created_at:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      pro:
-        $ref: '#/definitions/domain.UserPro'
     type: object
   domain.RefreshTokenRequest:
     properties:
@@ -302,6 +320,33 @@ info:
   contact: {}
   title: Ston Tactics
 paths:
+  /api/account:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: Удалить аккаунт
+      tags:
+      - Account
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Account'
+      security:
+      - Bearer: []
+      summary: Получить информацию о пользователе
+      tags:
+      - Account
   /api/folder:
     get:
       produces:
@@ -423,20 +468,56 @@ paths:
       summary: Создать платеж
       tags:
       - Payment
-  /api/profile:
-    get:
+  /api/reset/email:
+    post:
+      parameters:
+      - description: create code request
+        in: body
+        name: createChangeEmailRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ChangeEmailCreate'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Profile'
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Получить информацию о пользователе
+      summary: Отправить код на новую почту
       tags:
-      - User
+      - ChangeEmail
+  /api/reset/email/confirm:
+    post:
+      parameters:
+      - description: code request
+        in: body
+        name: codeRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ChangeEmailConfirmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Подтверждение новой почты
+      tags:
+      - ChangeEmail
   /api/spreading:
     get:
       parameters:
@@ -641,6 +722,26 @@ paths:
       summary: Обновить стратегию
       tags:
       - Strategy
+  /auth/{provider}:
+    get:
+      parameters:
+      - description: vk/google
+        in: path
+        name: provider
+        required: true
+        type: string
+      - description: jwt token
+        in: query
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Вход по социальной сети
+      tags:
+      - Login
   /login:
     post:
       parameters:

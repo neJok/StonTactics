@@ -12,7 +12,7 @@ import (
 
 type SpreadingController struct {
 	SpreadingUsecase domain.SpreadingUsecase
-	ProfileUsecase   domain.ProfileUsecase
+	AccountUsecase   domain.AccountUsecase
 }
 
 // Create		godoc
@@ -33,7 +33,7 @@ func (sc *SpreadingController) Create(c *gin.Context) {
 	}
 
 	userID := c.GetString("x-user-id")
-	user, err := sc.ProfileUsecase.GetProfileByID(c, userID)
+	user, err := sc.AccountUsecase.GetByAccountByID(c, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return

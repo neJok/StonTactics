@@ -6,6 +6,7 @@ import (
 	"stontactics/bootstrap"
 	"stontactics/domain"
 	"stontactics/internal/authutil"
+	// "stontactics/internal/tokenutil"
 	"strconv"
 	"strings"
 	"time"
@@ -20,6 +21,14 @@ type LoginController struct {
 	Env          *bootstrap.Env
 }
 
+// ConnectVK	godoc
+// @Summary	    Вход по социальной сети
+// @Tags        Login
+// @Router      /auth/{provider} [get]
+// @Param       provider	path	string	true	"vk/google"
+// @Param       token	    query	string	false	"jwt token"
+// @Produce		json
+// @Security 	Bearer
 func (lc *LoginController) BeginLogin(c *gin.Context) {
 	provider := c.Param("provider")
 	oauthState := authutil.GenerateStateOauthCookie(c.Writer)
@@ -34,6 +43,14 @@ func (lc *LoginController) BeginLogin(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Invalid provider")
 		return
 	}
+
+	token := c.Query("token")
+	if token != "" {
+		var expiration = time.Now().Add(365 * 24 * time.Hour)
+		cookie := http.Cookie{Name: "token", Value: token, Expires: expiration}
+		http.SetCookie(c.Writer, &cookie)
+	}
+	
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
@@ -65,7 +82,7 @@ func (lc *LoginController) Callback(c *gin.Context) {
 
 	var user domain.User
 	var userEntry domain.User
-	
+
 	switch provider {
 	case "google":
 		// Получение данных от Google
@@ -101,7 +118,7 @@ func (lc *LoginController) Callback(c *gin.Context) {
 		}
 
 		dbUser, err := lc.LoginUsecase.GetUserByGoogleID(c, userEntry.Auth.Google.ID)
-		if (err != nil) {
+		if err != nil {
 			user = dbUser
 		}
 	case "vk":
@@ -128,7 +145,7 @@ func (lc *LoginController) Callback(c *gin.Context) {
 				Until:  nil,
 			},
 			Auth: domain.UserAuth{
-				Email: domain.EmailAuth{},
+				Email:  domain.EmailAuth{},
 				Google: domain.SocialAuth{},
 				VK: domain.SocialAuth{
 					ID: strconv.Itoa(data.ID),
@@ -138,13 +155,22 @@ func (lc *LoginController) Callback(c *gin.Context) {
 		}
 
 		dbUser, err := lc.LoginUsecase.GetUserByVKID(c, userEntry.Auth.VK.ID)
-		if (err != nil) {
+		if err != nil {
 			user = dbUser
 		}
 	default:
 		c.String(http.StatusInternalServerError, "Invalid provider")
 		return
 	}
+
+	/* token, err := c.Cookie("token")
+	if err == nil {
+		userID, err := tokenutil.ExtractIDFromToken(token, lc.Env.AccessTokenSecret)
+		if err == nil {
+			tokenUser, err := lc.LoginUsecase.GetUserByID(c, userID)
+		}
+	}
+ 	*/
 
 	var accessToken, refreshToken string
 	if user.ID != "" {
@@ -179,7 +205,6 @@ func (lc *LoginController) Callback(c *gin.Context) {
 	c.Redirect(http.StatusFound, fmt.Sprintf("%s/callback?accessToken=%s&refreshToken=%s", lc.Env.FrontendAddress, accessToken, refreshToken))
 }
 
-
 // LoginEmail	godoc
 // @Summary		Вход по почте и паролю
 // @Tags        Login
@@ -195,7 +220,7 @@ func (lc *LoginController) LoginEmail(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-	
+
 	email := strings.ToLower(loginRequest.Email)
 	user, err := lc.LoginUsecase.GetUserByEmail(c, email)
 	if err != nil || bcrypt.CompareHashAndPassword(user.Auth.Email.Password, []byte(loginRequest.Password)) != nil {
@@ -216,7 +241,7 @@ func (lc *LoginController) LoginEmail(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, domain.RefreshTokenResponse{
-		AccessToken: accessToken,
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	})
 }

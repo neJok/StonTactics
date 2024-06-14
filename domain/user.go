@@ -42,12 +42,15 @@ type UserRepository interface {
 	Create(c context.Context, user *User) (string, error)
 	UpdateMetaData(c context.Context, id string, name string, avatarUrl string) error
 	UpdatePassword(c context.Context, id string, password []byte) error
+	UpdateEmail(c context.Context, id string, email string) error
 	ActivatePro(c context.Context, id string, until *time.Time) error
 	GetByID(c context.Context, id string) (User, error)
 
 	GetUserByGoogleID(c context.Context, id string) (User, error)
 	GetUserByVKID(c context.Context, id string) (User, error)
 	GetUserByEmail(c context.Context, email string) (User, error)
+
+	DeleteByID(c context.Context, id string)
 }
 
 type GoogleUserResponse struct {

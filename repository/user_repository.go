@@ -120,3 +120,16 @@ func (ur *userRepository) UpdatePassword(c context.Context, id string, password 
 	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth.email.password": password}})
 	return err
 }
+
+func (ur *userRepository) UpdateEmail(c context.Context, id string, email string) error {
+	collection := ur.database.Collection(ur.collection)
+	
+	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth.email.email": email}})
+	return err
+}
+
+func (ur *userRepository) DeleteByID(c context.Context, id string) {
+	collection := ur.database.Collection(ur.collection)
+	
+	collection.DeleteOne(c, bson.M{"_id": id})
+}

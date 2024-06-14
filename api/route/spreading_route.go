@@ -13,10 +13,10 @@ import (
 
 func NewSpreadingRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
 	sr := repository.NewSpreadingRepository(db, domain.CollectionSpreadouts)
-	pr := repository.NewUserRepository(db, domain.CollectionUser)
+	ur := repository.NewUserRepository(db, domain.CollectionUser)
 	sc := &controller.SpreadingController{
 		SpreadingUsecase: usecase.NewSpreadingUsecase(sr, timeout),
-		ProfileUsecase: usecase.NewProfileUsecase(pr, timeout),
+		AccountUsecase: usecase.NewAccountUsecase(ur, timeout),
 	}
 	group.GET("/spreading", sc.FetchMany)
 	group.POST("/spreading", sc.Create)

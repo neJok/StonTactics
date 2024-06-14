@@ -24,9 +24,10 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gi
 	// Middleware to verify AccessToken
 	protectedRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
 	// All Private APIs
-	NewProfileRouter(env, timeout, db, protectedRouter)
 	NewStrategyRouter(env, timeout, db, protectedRouter)
 	NewFolderRouter(env, timeout, db, protectedRouter)
 	NewSpreadingRouter(env, timeout, db, protectedRouter)
 	NewPaymentRouter(env, timeout, db, protectedRouter, publicRouter, tinkoffClient)
+	NewChangeEmailRouter(env, timeout, db, protectedRouter)
+	NewAccountRouter(env, timeout, db, protectedRouter)
 }

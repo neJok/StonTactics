@@ -20,7 +20,7 @@ type ResetPassowrdController struct {
 	Env                  *bootstrap.Env
 }
 
-// FetchOne	godoc
+// CreateResetPasswordCode	godoc
 // @Summary	    Отправить запрос на смену пароля
 // @Tags        ResetPassword
 // @Router      /reset/password [post]
@@ -73,7 +73,7 @@ func (rc *ResetPassowrdController) CreateResetPasswordCode(c *gin.Context) {
 	c.JSON(http.StatusOK, domain.SuccessResponse{Message: "the code has been sent by email"})
 }
 
-// ConfirmCode	godoc
+// ConfirmResetCode	godoc
 // @Summary		Подтверждение почты по коду
 // @Tags        ResetPassword
 // @Router      /reset/password/confirm [post]
@@ -120,7 +120,7 @@ func (rc *ResetPassowrdController) ConfirmResetCode(c *gin.Context) {
 	})
 }
 
-// ConfirmCode	godoc
+// ResetPasswordToken	godoc
 // @Summary		Смена пароля
 // @Tags        ResetPassword
 // @Router      /reset/password [put]
