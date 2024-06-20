@@ -1,14 +1,14 @@
 package bootstrap
 
 import (
-	"stontactics/mongo"
+	"github.com/neJok/StonTactics/mongo"
 
 	"github.com/nikita-vanyasin/tinkoff"
 )
 
 type Application struct {
-	Env   *Env
-	Mongo mongo.Client
+	Env           *Env
+	Mongo         mongo.Client
 	TinkoffClient *tinkoff.Client
 }
 

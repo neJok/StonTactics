@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	mongo "stontactics/mongo"
+	mongo "github.com/neJok/StonTactics/mongo"
 	mock "github.com/stretchr/testify/mock"
 )
 

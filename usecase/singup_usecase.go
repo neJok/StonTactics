@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
-	"stontactics/domain"
-	"stontactics/internal/tokenutil"
 	"time"
+
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/internal/tokenutil"
 )
 
 type signUpUsecase struct {

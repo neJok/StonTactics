@@ -2,8 +2,9 @@ package usecase
 
 import (
 	"context"
-	"stontactics/domain"
 	"time"
+
+	"github.com/neJok/StonTactics/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"stontactics/domain"
 	"time"
+
+	"github.com/neJok/StonTactics/domain"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type spreadingUsecase struct {

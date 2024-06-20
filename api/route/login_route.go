@@ -3,13 +3,14 @@ package route
 import (
 	"time"
 
+	"github.com/neJok/StonTactics/api/controller"
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/mongo"
+	"github.com/neJok/StonTactics/repository"
+	"github.com/neJok/StonTactics/usecase"
+
 	"github.com/gin-gonic/gin"
-	"stontactics/api/controller"
-	"stontactics/bootstrap"
-	"stontactics/domain"
-	"stontactics/mongo"
-	"stontactics/repository"
-	"stontactics/usecase"
 )
 
 func NewLoginRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {

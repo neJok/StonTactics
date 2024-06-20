@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/vk"
 	"io/ioutil"
 	"net/http"
-	"stontactics/bootstrap"
-	"stontactics/domain"
+
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/vk"
 )
 
 const (

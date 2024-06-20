@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"stontactics/mongo"
+	"github.com/neJok/StonTactics/mongo"
 )
 
 func NewMongoDatabase(env *Env) mongo.Client {

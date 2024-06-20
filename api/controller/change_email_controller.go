@@ -2,12 +2,13 @@ package controller
 
 import (
 	"net/http"
-	"stontactics/bootstrap"
-	"stontactics/domain"
-	"stontactics/internal/mail"
-	"stontactics/internal/random"
 	"strings"
 	"time"
+
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/internal/mail"
+	"github.com/neJok/StonTactics/internal/random"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -22,7 +23,7 @@ type ChangeEmailController struct {
 // @Summary	    Отправить код на новую почту
 // @Tags        ChangeEmail
 // @Router      /api/reset/email [post]
-// @Success		200		{object}	domain.SuccessResponse
+// @Success		200		{object}	domain.Account
 // @Failure		400		{object}	domain.ErrorResponse
 // @Param       createChangeEmailRequest	body	domain.ChangeEmailCreate	true	"create code request"
 // @Produce		json
@@ -36,7 +37,7 @@ func (cc *ChangeEmailController) CreateChangeEmailCode(c *gin.Context) {
 	}
 
 	email := strings.ToLower(createChangeEmailRequest.Email)
-	_, err = cc.ChangeEmailUsecase.GetUserByEmail(c, email)
+	user, err := cc.ChangeEmailUsecase.GetUserByEmail(c, email)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "This mail already used"})
 		return
@@ -70,7 +71,17 @@ func (cc *ChangeEmailController) CreateChangeEmailCode(c *gin.Context) {
 	data["Subject"] = subject
 	go mail.SendEmail(email, "registerLetter", data, subject, cc.Env)
 
-	c.JSON(http.StatusOK, domain.SuccessResponse{Message: "the code has been sent by email"})
+	response := domain.Account{
+		ID:        userID,
+		Name:      user.Name,
+		Email:     user.Auth.Email.Email,
+		AvatarURl: user.AvatarURL,
+		Pro:       user.Pro,
+		CreatedAt: user.CreatedAt,
+		VK:        user.Auth.VK,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 // ConfirmResetCode	godoc

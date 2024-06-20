@@ -2,12 +2,13 @@ package controller
 
 import (
 	"net/http"
-	"stontactics/bootstrap"
-	"stontactics/domain"
-	"stontactics/internal/mail"
-	"stontactics/internal/random"
 	"strings"
 	"time"
+
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/internal/mail"
+	"github.com/neJok/StonTactics/internal/random"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"

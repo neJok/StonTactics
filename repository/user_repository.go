@@ -2,10 +2,11 @@ package repository
 
 import (
 	"context"
-	"stontactics/domain"
-	"stontactics/mongo"
 	"strconv"
 	"time"
+
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -32,7 +33,7 @@ func (ur *userRepository) Create(c context.Context, user *domain.User) (string, 
 	return id, err
 }
 
-func CheckPro(c context.Context, collection mongo.Collection, user *domain.User) (domain.UserPro) {
+func CheckPro(c context.Context, collection mongo.Collection, user *domain.User) domain.UserPro {
 	if user.Pro.Active && user.Pro.Until != nil {
 		now := time.Now()
 		if now.After(*user.Pro.Until) {
@@ -99,7 +100,6 @@ func (ur *userRepository) GetUserByEmail(c context.Context, email string) (domai
 	return user, nil
 }
 
-
 func (ur *userRepository) Update(c context.Context, id string, data bson.M) error {
 	collection := ur.database.Collection(ur.collection)
 
@@ -116,13 +116,13 @@ func (ur *userRepository) ActivatePro(c context.Context, id string, until *time.
 
 func (ur *userRepository) UpdatePassword(c context.Context, id string, password []byte) error {
 	collection := ur.database.Collection(ur.collection)
-	
+
 	_, err := collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth.email.password": password}})
 	return err
 }
 
 func (ur *userRepository) DeleteByID(c context.Context, id string) {
 	collection := ur.database.Collection(ur.collection)
-	
+
 	collection.DeleteOne(c, bson.M{"_id": id})
 }

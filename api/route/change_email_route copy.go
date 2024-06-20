@@ -3,12 +3,12 @@ package route
 import (
 	"time"
 
-	"stontactics/api/controller"
-	"stontactics/bootstrap"
-	"stontactics/domain"
-	"stontactics/mongo"
-	"stontactics/repository"
-	"stontactics/usecase"
+	"github.com/neJok/StonTactics/api/controller"
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/mongo"
+	"github.com/neJok/StonTactics/repository"
+	"github.com/neJok/StonTactics/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +18,7 @@ func NewChangeEmailRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Da
 	cr := repository.NewChangeEmailRepository(db, domain.CollectionChangeEmailCode)
 	cc := &controller.ChangeEmailController{
 		ChangeEmailUsecase: usecase.NewChangeEmailUsecase(ur, cr, timeout),
-		Env:           env,
+		Env:                env,
 	}
 
 	group.POST("/reset/email", cc.CreateChangeEmailCode)

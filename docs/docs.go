@@ -288,7 +288,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.SuccessResponse"
+                            "$ref": "#/definitions/domain.Account"
                         }
                     },
                     "400": {
@@ -838,7 +838,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.SuccessResponse"
+                            "$ref": "#/definitions/domain.Account"
                         }
                     },
                     "400": {
@@ -981,8 +981,8 @@ const docTemplate = `{
                 "pro": {
                     "$ref": "#/definitions/domain.UserPro"
                 },
-                "vk_id": {
-                    "type": "string"
+                "vk": {
+                    "$ref": "#/definitions/domain.SocialAuth"
                 }
             }
         },
@@ -1249,6 +1249,20 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 100,
                     "minLength": 8
+                }
+            }
+        },
+        "domain.SocialAuth": {
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
                 }
             }
         },

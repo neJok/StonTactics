@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"stontactics/domain"
-	"stontactics/internal/tokenutil"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/internal/tokenutil"
 )
 
 type refreshTokenUsecase struct {

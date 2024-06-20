@@ -22,7 +22,9 @@ type EmailAuth struct {
 }
 
 type SocialAuth struct {
-	ID string `bson:"id"`
+	ID        string `bson:"id"`
+	FirstName string `bson:"first_name"`
+	LastName  string `bson:"last_name"`
 }
 
 type UserAuth struct {
@@ -32,11 +34,11 @@ type UserAuth struct {
 }
 
 type User struct {
-	ID        string    `bson:"_id"`
-	Name      string    `bson:"name"`
-	AvatarURL string    `bson:"avatar_url"`
-	Pro       UserPro   `bson:"pro"`
-	Auth      UserAuth  `bson:"auth"`
+	ID        string     `bson:"_id"`
+	Name      string     `bson:"name"`
+	AvatarURL string     `bson:"avatar_url"`
+	Pro       UserPro    `bson:"pro"`
+	Auth      UserAuth   `bson:"auth"`
 	CreatedAt *time.Time `bson:"created_at"`
 }
 

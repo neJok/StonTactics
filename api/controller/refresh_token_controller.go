@@ -3,9 +3,10 @@ package controller
 import (
 	"net/http"
 
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+
 	"github.com/gin-gonic/gin"
-	"stontactics/bootstrap"
-	"stontactics/domain"
 )
 
 type RefreshTokenController struct {

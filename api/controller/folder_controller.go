@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"net/http"
+
+	"github.com/neJok/StonTactics/domain"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"net/http"
-	"stontactics/domain"
 )
 
 type FolderController struct {

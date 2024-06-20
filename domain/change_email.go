@@ -22,7 +22,7 @@ type ChangeEmailCreate struct {
 }
 
 type ChangeEmailConfirmRequest struct {
-	Code  int    `bson:"code" form:"code" binding:"required" json:"code"`
+	Code int `bson:"code" form:"code" binding:"required" json:"code"`
 }
 
 type ChangeEmailCodesRepository interface {

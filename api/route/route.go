@@ -3,9 +3,9 @@ package route
 import (
 	"time"
 
-	"stontactics/api/middleware"
-	"stontactics/bootstrap"
-	"stontactics/mongo"
+	"github.com/neJok/StonTactics/api/middleware"
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/mongo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nikita-vanyasin/tinkoff"

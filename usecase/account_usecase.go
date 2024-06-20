@@ -2,8 +2,9 @@ package usecase
 
 import (
 	"context"
-	"stontactics/domain"
 	"time"
+
+	"github.com/neJok/StonTactics/domain"
 )
 
 type accountUsecase struct {
@@ -39,6 +40,6 @@ func (au *accountUsecase) GetByAccountByID(c context.Context, id string) (*domai
 		AvatarURl: user.AvatarURL,
 		Pro:       user.Pro,
 		CreatedAt: user.CreatedAt,
-		VKID: user.Auth.VK.ID,
+		VK:        user.Auth.VK,
 	}, nil
 }

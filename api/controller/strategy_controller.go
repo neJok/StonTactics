@@ -2,8 +2,9 @@ package controller
 
 import (
 	"net/http"
-	"stontactics/domain"
 	"strings"
+
+	"github.com/neJok/StonTactics/domain"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"

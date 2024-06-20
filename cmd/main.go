@@ -1,13 +1,16 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
-	_ "stontactics/docs"
 	"time"
 
+	_ "github.com/neJok/StonTactics/docs"
+
+	"github.com/gin-contrib/cors"
+
+	route "github.com/neJok/StonTactics/api/route"
+	"github.com/neJok/StonTactics/bootstrap"
+
 	"github.com/gin-gonic/gin"
-	route "stontactics/api/route"
-	"stontactics/bootstrap"
 )
 
 // @title Ston Tactics

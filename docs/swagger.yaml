@@ -13,8 +13,8 @@ definitions:
         type: string
       pro:
         $ref: '#/definitions/domain.UserPro'
-      vk_id:
-        type: string
+      vk:
+        $ref: '#/definitions/domain.SocialAuth'
     type: object
   domain.ChangeEmailConfirmRequest:
     properties:
@@ -197,6 +197,15 @@ definitions:
     required:
     - email
     - password
+    type: object
+  domain.SocialAuth:
+    properties:
+      firstName:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
     type: object
   domain.Spreading:
     properties:
@@ -485,7 +494,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.SuccessResponse'
+            $ref: '#/definitions/domain.Account'
         "400":
           description: Bad Request
           schema:
@@ -807,7 +816,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.SuccessResponse'
+            $ref: '#/definitions/domain.Account'
         "400":
           description: Bad Request
           schema:

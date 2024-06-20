@@ -3,13 +3,14 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"stontactics/bootstrap"
-	"stontactics/domain"
-	"stontactics/internal/authutil"
-	"stontactics/internal/tokenutil"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/internal/authutil"
+	"github.com/neJok/StonTactics/internal/tokenutil"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -51,7 +52,7 @@ func (lc *LoginController) BeginLogin(c *gin.Context) {
 		cookie := http.Cookie{Name: "token", Value: token, Expires: expiration}
 		http.SetCookie(c.Writer, &cookie)
 	}
-	
+
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
@@ -111,7 +112,8 @@ func (lc *LoginController) Callback(c *gin.Context) {
 			Auth: domain.UserAuth{
 				Email: domain.EmailAuth{},
 				Google: domain.SocialAuth{
-					ID: data.ID,
+					ID:        data.ID,
+					FirstName: data.Name,
 				},
 				VK: domain.SocialAuth{},
 			},
@@ -149,7 +151,9 @@ func (lc *LoginController) Callback(c *gin.Context) {
 				Email:  domain.EmailAuth{},
 				Google: domain.SocialAuth{},
 				VK: domain.SocialAuth{
-					ID: strconv.Itoa(data.ID),
+					ID:        strconv.Itoa(data.ID),
+					FirstName: data.FirstName,
+					LastName:  data.LastName,
 				},
 			},
 			CreatedAt: &now,
@@ -163,9 +167,9 @@ func (lc *LoginController) Callback(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Invalid provider")
 		return
 	}
-	
+
 	var accessToken, refreshToken string
-	
+
 	token, _ := c.Cookie("token")
 	userID, err := tokenutil.ExtractIDFromToken(token, lc.Env.AccessTokenSecret)
 	if err == nil && provider == "vk" && user.ID == "" {

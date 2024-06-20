@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"stontactics/domain"
+	"github.com/neJok/StonTactics/domain"
 
 	jwt "github.com/golang-jwt/jwt/v4"
 )
@@ -78,9 +78,9 @@ func ExtractIDFromToken(requestToken string, secret string) (string, error) {
 }
 
 func GenerateSecureToken(length int) string {
-    b := make([]byte, length)
-    if _, err := rand.Read(b); err != nil {
-        return ""
-    }
-    return hex.EncodeToString(b)
+	b := make([]byte, length)
+	if _, err := rand.Read(b); err != nil {
+		return ""
+	}
+	return hex.EncodeToString(b)
 }

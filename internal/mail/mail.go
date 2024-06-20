@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
-	"stontactics/bootstrap"
+
+	"github.com/neJok/StonTactics/bootstrap"
 )
 
 func SendEmail(email string, templateName string, data interface{}, subject string, env *bootstrap.Env) error {
-	smtpServer := "smtp.gmail.com"
+	smtpServer := "smtp.mail.ru"
 	smtpPort := "587"
 
 	// Инициализируем шаблон

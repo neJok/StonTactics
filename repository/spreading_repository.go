@@ -2,10 +2,12 @@ package repository
 
 import (
 	"context"
+
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/mongo"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"stontactics/domain"
-	"stontactics/mongo"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

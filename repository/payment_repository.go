@@ -2,9 +2,11 @@ package repository
 
 import (
 	"context"
+
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/mongo"
+
 	"go.mongodb.org/mongo-driver/bson"
-	"stontactics/domain"
-	"stontactics/mongo"
 )
 
 type paymentRepository struct {

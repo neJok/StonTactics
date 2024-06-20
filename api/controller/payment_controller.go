@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"stontactics/domain"
+	"github.com/neJok/StonTactics/domain"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -15,10 +15,9 @@ import (
 )
 
 type PaymentController struct {
-	PaymentUsecase 	  domain.PaymentUsecase
-	TinkoffClient	  *tinkoff.Client
+	PaymentUsecase domain.PaymentUsecase
+	TinkoffClient  *tinkoff.Client
 }
-
 
 // Create		godoc
 // @Summary		Создать платеж
@@ -36,8 +35,8 @@ func (pc *PaymentController) CreateTinkoff(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-	
-	prices := map[int16]uint64 {
+
+	prices := map[int16]uint64{
 		30: 9900,
 		90: 14900,
 	}
@@ -48,10 +47,10 @@ func (pc *PaymentController) CreateTinkoff(c *gin.Context) {
 	}
 
 	req := &tinkoff.InitRequest{
-		Amount:      prices[paymentRequest.Days],
-		OrderID:     uuid.New().String(),
+		Amount:  prices[paymentRequest.Days],
+		OrderID: uuid.New().String(),
 		Receipt: &tinkoff.Receipt{
-			Email: paymentRequest.Email,
+			Email:    paymentRequest.Email,
 			Taxation: tinkoff.TaxationUSNIncome,
 			Items: []*tinkoff.ReceiptItem{
 				{
@@ -63,19 +62,19 @@ func (pc *PaymentController) CreateTinkoff(c *gin.Context) {
 				},
 			},
 		},
-		Data: map[string]string{"": "",},
+		Data: map[string]string{"": ""},
 	}
 	res, err := pc.TinkoffClient.Init(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
-	
+
 	pc.PaymentUsecase.Create(c, &domain.Payment{
 		PaymentID: res.PaymentID,
-		UserID: c.GetString("x-user-id"),
-		Days: paymentRequest.Days,
-		Paid: false,
+		UserID:    c.GetString("x-user-id"),
+		Days:      paymentRequest.Days,
+		Paid:      false,
 	})
 
 	c.JSON(http.StatusCreated, domain.PaymentCreated{Url: res.PaymentURL})
@@ -99,7 +98,7 @@ func (pc *PaymentController) CallbackTinkoff(c *gin.Context) {
 		user, err := pc.PaymentUsecase.GetUser(c, payment.UserID)
 		if !payment.Paid && err == nil {
 			additional := time.Hour * 24 * time.Duration(payment.Days)
-			
+
 			var until time.Time
 			if user.Pro.Active {
 				until = user.Pro.Until.Add(additional)

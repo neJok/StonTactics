@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	mongo "stontactics/mongo"
+	mongo "github.com/neJok/StonTactics/mongo"
 	mock "github.com/stretchr/testify/mock"
 
 	mongo_drivermongo "go.mongodb.org/mongo-driver/mongo"

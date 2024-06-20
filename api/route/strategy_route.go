@@ -1,14 +1,16 @@
 package route
 
 import (
-	"github.com/gin-gonic/gin"
-	"stontactics/api/controller"
-	"stontactics/bootstrap"
-	"stontactics/domain"
-	"stontactics/mongo"
-	"stontactics/repository"
-	"stontactics/usecase"
 	"time"
+
+	"github.com/neJok/StonTactics/api/controller"
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/mongo"
+	"github.com/neJok/StonTactics/repository"
+	"github.com/neJok/StonTactics/usecase"
+
+	"github.com/gin-gonic/gin"
 )
 
 func NewStrategyRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
@@ -16,7 +18,7 @@ func NewStrategyRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Datab
 	ur := repository.NewUserRepository(db, domain.CollectionUser)
 	sc := &controller.StrategyController{
 		StrategyUsecase: usecase.NewStrategyUsecase(sr, timeout),
-		AccountUsecase: usecase.NewAccountUsecase(ur, timeout),
+		AccountUsecase:  usecase.NewAccountUsecase(ur, timeout),
 	}
 	group.GET("/strategy", sc.FetchMany)
 	group.POST("/strategy", sc.Create)

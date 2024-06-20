@@ -4,20 +4,20 @@ import (
 	"context"
 	"time"
 
-	"stontactics/domain"
+	"github.com/neJok/StonTactics/domain"
 )
 
 type paymentUsecase struct {
-	userRepository 	  domain.UserRepository
+	userRepository    domain.UserRepository
 	paymentRepository domain.PaymentRepository
 	contextTimeout    time.Duration
 }
 
 func NewPaymentUsecase(paymentRepository domain.PaymentRepository, userRepository domain.UserRepository, timeout time.Duration) domain.PaymentUsecase {
 	return &paymentUsecase{
-		userRepository: userRepository,
+		userRepository:    userRepository,
 		paymentRepository: paymentRepository,
-		contextTimeout: timeout,
+		contextTimeout:    timeout,
 	}
 }
 

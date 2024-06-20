@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"stontactics/domain"
-	"stontactics/internal/tokenutil"
+	"github.com/neJok/StonTactics/domain"
+	"github.com/neJok/StonTactics/internal/tokenutil"
 
 	"github.com/gin-gonic/gin"
 )

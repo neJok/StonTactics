@@ -1,10 +1,12 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"stontactics/bootstrap"
-	"stontactics/domain"
+
+	"github.com/neJok/StonTactics/bootstrap"
+	"github.com/neJok/StonTactics/domain"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AccountController struct {
