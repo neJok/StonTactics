@@ -13,6 +13,8 @@ services:
       - "$PORT:$PORT"
     depends_on:
       - mongodb
+    volumes:
+      - media:/media
 
   mongodb:
     image: mongo:6.0
@@ -29,3 +31,5 @@ services:
 
 volumes:
   dbdata:
+  media:
+    driver: local
