@@ -14,7 +14,7 @@ services:
     depends_on:
       - mongodb
     volumes:
-      - media:/media
+      - media_avatars:/app/media/avatars
 
   mongodb:
     image: mongo:6.0
@@ -31,5 +31,4 @@ services:
 
 volumes:
   dbdata:
-  media:
-    driver: local
+  media_avatars:

@@ -70,11 +70,11 @@ func (sc *SignUpController) SignUp(c *gin.Context) {
 	sc.SignUpUsecase.CreateRegisterCode(c, &code)
 
 	data := make(map[string]interface{}, 0)
-	subject := "Регистрация Ston Tactics"
+	subject := "Регистрация"
 
 	data["Code"] = code.Code
 	data["Subject"] = subject
-	go mail.SendEmail(email, "registerLetter", data, subject, sc.Env)
+	go mail.SendEmail(email, "letter", data, subject, sc.Env)
 
 	c.JSON(http.StatusOK, domain.SuccessResponse{Message: "the code has been sent by email"})
 }

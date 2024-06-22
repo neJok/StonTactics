@@ -65,17 +65,17 @@ func (rc *ResetPassowrdController) CreateResetPasswordCode(c *gin.Context) {
 	rc.ResetPassowrdUsecase.CreateCode(c, &code)
 
 	data := make(map[string]interface{}, 0)
-	subject := "Восстановление пароля Ston Tactics"
+	subject := "Восстановление пароля"
 
 	data["Code"] = code.Code
 	data["Subject"] = subject
-	go mail.SendEmail(email, "registerLetter", data, subject, rc.Env)
+	go mail.SendEmail(email, "letter", data, subject, rc.Env)
 
 	response := domain.Account{
 		ID:        user.ID,
 		Name:      user.Name,
 		Email:     user.Auth.Email.Email,
-		AvatarURl: user.AvatarURL,
+		AvatarURL: user.AvatarURL,
 		Pro:       user.Pro,
 		CreatedAt: user.CreatedAt,
 		VK:        user.Auth.VK,

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Onest&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        border: 0;
+        box-sizing: border-box;
+        font-family: "Onest", sans-serif;
+        font-size: 14px;
+      }
+      body {
+        height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mail {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        height: 500px;
+        width: 400px;
+        background: #f1f1f1;
+      }
+      .header__mail {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 200px;
+        background: url("https://i.imgur.com/9udB4Bc_d.webp?maxwidth=1520&fidelity=grand");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .org__name {
+        font-size: 26px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 3px;
+      }
+      .org__subname {
+        color: #d1d1d1;
+        margin-top: 3px;
+        font-size: 16px;
+      }
+      .code__title {
+        font-weight: 500;
+        font-size: 17px;
+        margin-top: 20px;
+      }
+      .code {
+        font-size: 40px;
+        margin-top: 40px;
+      }
+      .other__info {
+        color: #a1a1a1;
+        font-style: italic;
+        margin-top: 40px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="mail">
+      <div class="header__mail">
+        <p class="org__name">STON Tactics</p>
+        <p class="org__subname">Тактики и раскидки</p>
+      </div>
+
+      <p class="code__title">{{ .Subject }}</p>
+      <p class="code">{{ .Code }}</p>
+      <p class="other__info">
+        Если вы не отправляли запрос на получение кода, то проигнорируйте это
+        письмо
+      </p>
+      
+    </main>
+  </body>
+</html>

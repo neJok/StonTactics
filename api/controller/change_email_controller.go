@@ -65,17 +65,17 @@ func (cc *ChangeEmailController) CreateChangeEmailCode(c *gin.Context) {
 	cc.ChangeEmailUsecase.CreateCode(c, &code)
 
 	data := make(map[string]interface{}, 0)
-	subject := "Смена почты Ston Tactics"
+	subject := "Смена почты"
 
 	data["Code"] = code.Code
 	data["Subject"] = subject
-	go mail.SendEmail(email, "registerLetter", data, subject, cc.Env)
+	go mail.SendEmail(email, "letter", data, subject, cc.Env)
 
 	response := domain.Account{
 		ID:        userID,
 		Name:      user.Name,
 		Email:     user.Auth.Email.Email,
-		AvatarURl: user.AvatarURL,
+		AvatarURL: user.AvatarURL,
 		Pro:       user.Pro,
 		CreatedAt: user.CreatedAt,
 		VK:        user.Auth.VK,

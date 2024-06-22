@@ -38,7 +38,7 @@ func (au *accountUsecase) GetByAccountByID(c context.Context, id string) (*domai
 	return &domain.Account{
 		ID: id, Name: user.Name,
 		Email:     user.Auth.Email.Email,
-		AvatarURl: user.AvatarURL,
+		AvatarURL: user.AvatarURL,
 		Pro:       user.Pro,
 		CreatedAt: user.CreatedAt,
 		VK:        user.Auth.VK,
