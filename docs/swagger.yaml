@@ -358,6 +358,35 @@ paths:
       summary: Получить информацию о пользователе
       tags:
       - Account
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Файл для загрузки
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Обновить информацию о пользователе
+      tags:
+      - Account
   /api/folder:
     get:
       produces:

@@ -3,6 +3,8 @@ package domain
 import (
 	"context"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Account struct {
@@ -18,4 +20,5 @@ type Account struct {
 type AccountUsecase interface {
 	GetByAccountByID(c context.Context, id string) (*Account, error)
 	DeleteByID(c context.Context, id string)
+	UpdateByID(c context.Context, id string, data bson.M) error
 }

@@ -14,6 +14,7 @@ import (
 func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gin.Engine, tinkoffClient *tinkoff.Client) {
 	publicRouter := gin.Group("")
 	// All Public APIs
+	publicRouter.Static("/media", "./media")
 	NewSwaggerRouter(publicRouter)
 	NewLoginRouter(env, timeout, db, publicRouter)
 	NewRefreshTokenRouter(env, timeout, db, publicRouter)

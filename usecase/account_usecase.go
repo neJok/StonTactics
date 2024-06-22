@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/neJok/StonTactics/domain"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type accountUsecase struct {
@@ -42,4 +43,10 @@ func (au *accountUsecase) GetByAccountByID(c context.Context, id string) (*domai
 		CreatedAt: user.CreatedAt,
 		VK:        user.Auth.VK,
 	}, nil
+}
+
+func (au *accountUsecase) UpdateByID(c context.Context, id string, data bson.M) error {
+	ctx, cancel := context.WithTimeout(c, au.contextTimeout)
+	defer cancel()
+	return au.userRepository.Update(ctx, id, data)
 }
