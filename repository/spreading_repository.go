@@ -92,3 +92,15 @@ func (sr *spreadingRepository) GetCount(c context.Context, userID string) int64 
 	count, _ := collection.CountDocuments(c, bson.M{"user_id": userID})
 	return count
 }
+
+func (sr *spreadingRepository) DeleteByID(c context.Context, userID, spreadingID string) error {
+	collection := sr.database.Collection(sr.collection)
+
+	idHex, err := primitive.ObjectIDFromHex(spreadingID)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.DeleteOne(c, bson.M{"user_id": userID, "_id": idHex})
+	return err
+}

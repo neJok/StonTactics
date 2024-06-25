@@ -124,5 +124,5 @@ func (ur *userRepository) UpdatePassword(c context.Context, id string, password 
 func (ur *userRepository) DeleteByID(c context.Context, id string) {
 	collection := ur.database.Collection(ur.collection)
 
-	collection.DeleteOne(c, bson.M{"_id": id})
+	collection.UpdateOne(c, bson.M{"_id": id}, bson.M{"$set": bson.M{"auth": domain.UserAuth{}}})
 }

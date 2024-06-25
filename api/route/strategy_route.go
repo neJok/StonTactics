@@ -24,4 +24,5 @@ func NewStrategyRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Datab
 	group.POST("/strategy", sc.Create)
 	group.GET("/strategy/:id", sc.FetchOne)
 	group.PUT("/strategy/:id", sc.Update)
+	group.DELETE("/strategy/:id", sc.DeleteOne)
 }

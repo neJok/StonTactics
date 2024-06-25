@@ -19,26 +19,44 @@ func NewFolderUsecase(folderRepository domain.FolderRepository, timeout time.Dur
 	}
 }
 
-func (su *folderUsecase) Create(c context.Context, folder *domain.Folder) error {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (fu *folderUsecase) Create(c context.Context, folder *domain.Folder) error {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return su.folderRepository.Create(ctx, folder)
+	return fu.folderRepository.Create(ctx, folder)
 }
 
-func (su *folderUsecase) FetchByUserID(c context.Context, userID string) ([]domain.Folder, error) {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (fu *folderUsecase) FetchByUserID(c context.Context, userID string) ([]domain.Folder, error) {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return su.folderRepository.FetchByUserID(ctx, userID)
+	return fu.folderRepository.FetchByUserID(ctx, userID)
 }
 
-func (su *folderUsecase) AddStrategy(c context.Context, userID string, folderID string, strategyID string) error {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (fu *folderUsecase) FetchOneByID(c context.Context, userID string, folderID string) (domain.Folder, error) {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return su.folderRepository.AddStrategy(ctx, userID, folderID, strategyID)
+	return fu.folderRepository.FetchOneByID(ctx, userID, folderID)
 }
 
-func (su *folderUsecase) AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
-	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+func (fu *folderUsecase) AddStrategy(c context.Context, userID string, folderID string, strategyID string) error {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return su.folderRepository.AddSpreading(ctx, userID, folderID, spreadingID)
+	return fu.folderRepository.AddStrategy(ctx, userID, folderID, strategyID)
+}
+
+func (fu *folderUsecase) AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
+	defer cancel()
+	return fu.folderRepository.AddSpreading(ctx, userID, folderID, spreadingID)
+}
+
+func (fu *folderUsecase) RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
+	defer cancel()
+	return fu.folderRepository.RemoveStrategy(ctx, userID, folderID, strategyID)
+}
+
+func (fu *folderUsecase) RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
+	defer cancel()
+	return fu.folderRepository.RemoveSpreading(ctx, userID, folderID, spreadingID)
 }

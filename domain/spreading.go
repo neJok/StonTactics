@@ -22,6 +22,7 @@ type SpreadingRepository interface {
 	Create(c context.Context, spreading *Spreading) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
+	DeleteByID(c context.Context, userID string, spreadingID string) error
 	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }
@@ -30,6 +31,7 @@ type SpreadingUsecase interface {
 	Create(c context.Context, spreading *Spreading) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
+	DeleteByID(c context.Context, userID string, spreadingID string) error
 	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }

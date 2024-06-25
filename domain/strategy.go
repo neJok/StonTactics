@@ -22,6 +22,7 @@ type StrategyRepository interface {
 	Create(c context.Context, strategy *Strategy) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
+	DeleteByID(c context.Context, userID string, strategyID string) error
 	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }
@@ -30,6 +31,7 @@ type StrategyUsecase interface {
 	Create(c context.Context, strategy *Strategy) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
+	DeleteByID(c context.Context, userID string, strategyID string) error
 	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }

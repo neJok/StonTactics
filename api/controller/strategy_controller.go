@@ -149,3 +149,25 @@ func (sc *StrategyController) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, nil)
 }
+
+// DeleteOne	godoc
+// @Summary		Удалить стратегию
+// @Tags        Strategy
+// @Router      /api/strategy/{id} [delete]
+// @Success		200		{object}	nil
+// @Failure		400		{object}	domain.ErrorResponse
+// @Param       id		path	string	true	"id"
+// @Produce		json
+// @Security 	Bearer
+func (sc *StrategyController) DeleteOne(c *gin.Context) {
+	id := c.Param("id")
+	userID := c.GetString("x-user-id")
+
+	err := sc.StrategyUsecase.DeleteByID(c, userID, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
+}

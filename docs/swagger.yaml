@@ -100,6 +100,26 @@ definitions:
     required:
     - name
     type: object
+  domain.FolderRemoveSpreadingRequest:
+    properties:
+      folder_id:
+        type: string
+      spreading_id:
+        type: string
+    required:
+    - folder_id
+    - spreading_id
+    type: object
+  domain.FolderRemoveStrategyRequest:
+    properties:
+      folder_id:
+        type: string
+      strategy_id:
+        type: string
+    required:
+    - folder_id
+    - strategy_id
+    type: object
   domain.LoginRequest:
     properties:
       email:
@@ -373,7 +393,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.SuccessResponse'
+            $ref: '#/definitions/domain.Account'
         "400":
           description: Bad Request
           schema:
@@ -434,6 +454,30 @@ paths:
       tags:
       - Folder
   /api/folder/spreading:
+    delete:
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FolderRemoveSpreadingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить раскидку из папки
+      tags:
+      - Folder
     put:
       parameters:
       - description: request
@@ -459,6 +503,30 @@ paths:
       tags:
       - Folder
   /api/folder/strategy:
+    delete:
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FolderRemoveStrategyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить стратегию из папки
+      tags:
+      - Folder
     put:
       parameters:
       - description: request
@@ -610,6 +678,27 @@ paths:
       tags:
       - Spreading
   /api/spreading/{id}:
+    delete:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить раскидку
+      tags:
+      - Spreading
     get:
       parameters:
       - description: id
@@ -712,6 +801,27 @@ paths:
       tags:
       - Strategy
   /api/strategy/{id}:
+    delete:
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить стратегию
+      tags:
+      - Strategy
     get:
       parameters:
       - description: id

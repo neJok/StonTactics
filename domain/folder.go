@@ -21,15 +21,21 @@ type Folder struct {
 type FolderRepository interface {
 	Create(c context.Context, Folder *Folder) error
 	FetchByUserID(c context.Context, userID string) ([]Folder, error)
+	FetchOneByID(c context.Context, userID string, folderID string) (Folder, error)
 	AddStrategy(c context.Context, userID string, folderID string, strategyID string) error
+	RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error
 	AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error
+	RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error
 }
 
 type FolderUsecase interface {
 	Create(c context.Context, Folder *Folder) error
 	FetchByUserID(c context.Context, userID string) ([]Folder, error)
+	FetchOneByID(c context.Context, userID string, folderID string) (Folder, error)
 	AddStrategy(c context.Context, userID string, folderID string, strategyID string) error
+	RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error
 	AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error
+	RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error
 }
 
 type FolderCreateRequest struct {
@@ -41,7 +47,17 @@ type FolderAddStrategyRequest struct {
 	StrategyID string `json:"strategy_id" binding:"required"`
 }
 
+type FolderRemoveStrategyRequest struct {
+	FolderID   string `json:"folder_id" binding:"required"`
+	StrategyID string `json:"strategy_id" binding:"required"`
+}
+
 type FolderAddSpreadingRequest struct {
+	FolderID    string `json:"folder_id" binding:"required"`
+	SpreadingID string `json:"spreading_id" binding:"required"`
+}
+
+type FolderRemoveSpreadingRequest struct {
 	FolderID    string `json:"folder_id" binding:"required"`
 	SpreadingID string `json:"spreading_id" binding:"required"`
 }

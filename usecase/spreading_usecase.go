@@ -50,3 +50,9 @@ func (su *spreadingUsecase) GetCount(c context.Context, userID string) int64 {
 	defer cancel()
 	return su.spreadingRepository.GetCount(ctx, userID)
 }
+
+func (su *spreadingUsecase) DeleteByID(c context.Context, userID string, spreadingID string) error {
+	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+	defer cancel()
+	return su.spreadingRepository.DeleteByID(ctx, userID, spreadingID)
+}

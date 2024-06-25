@@ -50,3 +50,10 @@ func (su *strategyUsecase) GetCount(c context.Context, userID string) int64 {
 	defer cancel()
 	return su.strategyRepository.GetCount(ctx, userID)
 }
+
+
+func (su *strategyUsecase) DeleteByID(c context.Context, userID string, strategyID string) error {
+	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
+	defer cancel()
+	return su.strategyRepository.DeleteByID(ctx, userID, strategyID)
+}
