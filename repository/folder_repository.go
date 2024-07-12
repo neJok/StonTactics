@@ -70,7 +70,7 @@ func (sr *folderRepository) FetchOneByID(c context.Context, userID string, folde
 	return folder, nil
 }
 
-func (sr *folderRepository) AddStrategy(c context.Context, userID string, folderID string, strategyID string) error {
+func (sr *folderRepository) DeleteOneByID(c context.Context, userID string, folderID string) error {
 	collection := sr.database.Collection(sr.collection)
 
 	folderIDHex, err := primitive.ObjectIDFromHex(folderID)
@@ -78,11 +78,11 @@ func (sr *folderRepository) AddStrategy(c context.Context, userID string, folder
 		return err
 	}
 
-	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$addToSet": bson.M{"strategies": strategyID}})
+	_, err = collection.DeleteOne(c, bson.M{"_id": folderIDHex, "user_id": userID})
 	return err
 }
 
-func (sr *folderRepository) AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
+func (sr *folderRepository) AddStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error {
 	collection := sr.database.Collection(sr.collection)
 
 	folderIDHex, err := primitive.ObjectIDFromHex(folderID)
@@ -90,11 +90,11 @@ func (sr *folderRepository) AddSpreading(c context.Context, userID string, folde
 		return err
 	}
 
-	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$addToSet": bson.M{"spreadouts": spreadingID}})
+	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$addToSet": bson.M{"strategies": bson.M{"$each": strategiesIDS}}})
 	return err
 }
 
-func (sr *folderRepository) RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error {
+func (sr *folderRepository) AddSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error {
 	collection := sr.database.Collection(sr.collection)
 
 	folderIDHex, err := primitive.ObjectIDFromHex(folderID)
@@ -102,11 +102,11 @@ func (sr *folderRepository) RemoveStrategy(c context.Context, userID string, fol
 		return err
 	}
 
-	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$pull": bson.M{"strategies": strategyID}})
+	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$addToSet": bson.M{"spreadouts": bson.M{"$each": spreadoutsIDS}}})
 	return err
 }
 
-func (sr *folderRepository) RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
+func (sr *folderRepository) RemoveStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error {
 	collection := sr.database.Collection(sr.collection)
 
 	folderIDHex, err := primitive.ObjectIDFromHex(folderID)
@@ -114,6 +114,18 @@ func (sr *folderRepository) RemoveSpreading(c context.Context, userID string, fo
 		return err
 	}
 
-	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$pull": bson.M{"spreadouts": spreadingID}})
+	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$pull": bson.M{"strategies": bson.M{"$in": strategiesIDS}}})
+	return err
+}
+
+func (sr *folderRepository) RemoveSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error {
+	collection := sr.database.Collection(sr.collection)
+
+	folderIDHex, err := primitive.ObjectIDFromHex(folderID)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(c, bson.M{"_id": folderIDHex, "user_id": userID}, bson.M{"$pull": bson.M{"spreadouts": bson.M{"$in": spreadoutsIDS}}})
 	return err
 }

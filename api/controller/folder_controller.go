@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"net/http"
-	"slices"
-
 	"github.com/neJok/StonTactics/domain"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -75,32 +73,26 @@ func (fc *FolderController) FetchAll(c *gin.Context) {
 	c.JSON(http.StatusOK, folders)
 }
 
-// AddStrategy		godoc
-// @Summary		Добавить стратегию в папку
+// AddStrategies		godoc
+// @Summary		Добавить стратегии в папку
 // @Tags        Folder
 // @Router      /api/folder/strategy [put]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       request	body		domain.FolderAddStrategyRequest	true	"request"
+// @Param       request	body		domain.FolderAddStrategiesRequest	true	"request"
 // @Produce		json
 // @Security 	Bearer
-func (fc *FolderController) AddStrategy(c *gin.Context) {
+func (fc *FolderController) AddStrategies(c *gin.Context) {
 	userID := c.GetString("x-user-id")
 
-	var request domain.FolderAddStrategyRequest
+	var request domain.FolderAddStrategiesRequest
 	err := c.ShouldBindBodyWith(&request, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	_, err = fc.StrategyUsecase.FetchByID(c, request.StrategyID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	err = fc.FolderUsecase.AddStrategy(c, userID, request.FolderID, request.StrategyID)
+	err = fc.FolderUsecase.AddStrategies(c, userID, request.FolderID, request.StrategiesIDS)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -111,43 +103,32 @@ func (fc *FolderController) AddStrategy(c *gin.Context) {
 	})
 }
 
-// RemoveStrategy		godoc
-// @Summary		Удалить стратегию из папки
+// RemoveStrategies		godoc
+// @Summary		Удалить стратегии из папки
 // @Tags        Folder
 // @Router      /api/folder/strategy [delete]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       request	body		domain.FolderRemoveStrategyRequest	true	"request"
+// @Param       request	body		domain.FolderRemoveStrategiesRequest	true	"request"
 // @Produce		json
 // @Security 	Bearer
-func (fc *FolderController) RemoveStrategy(c *gin.Context) {
+func (fc *FolderController) RemoveStrategies(c *gin.Context) {
 	userID := c.GetString("x-user-id")
 
-	var request domain.FolderRemoveStrategyRequest
+	var request domain.FolderRemoveStrategiesRequest
 	err := c.ShouldBindBodyWith(&request, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	_, err = fc.StrategyUsecase.FetchByID(c, request.StrategyID)
+	_, err = fc.FolderUsecase.FetchOneByID(c, userID, request.FolderID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	folder, err := fc.FolderUsecase.FetchOneByID(c, userID, request.FolderID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	if !slices.Contains(folder.Strategies, request.StrategyID) {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The strategy is not in this folder"})
-		return
-	}
-
-	err = fc.FolderUsecase.RemoveStrategy(c, userID, request.FolderID, request.StrategyID)
+	err = fc.FolderUsecase.RemoveStrategies(c, userID, request.FolderID, request.StrategiesIDS)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -158,43 +139,32 @@ func (fc *FolderController) RemoveStrategy(c *gin.Context) {
 	})
 }
 
-// RemoveSpreading		godoc
-// @Summary		Удалить раскидку из папки
+// RemoveSpreadouts		godoc
+// @Summary		Удалить раскидки из папки
 // @Tags        Folder
 // @Router      /api/folder/spreading [delete]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       request	body		domain.FolderRemoveSpreadingRequest	true	"request"
+// @Param       request	body		domain.FolderRemoveSpreadoutsRequest	true	"request"
 // @Produce		json
 // @Security 	Bearer
-func (fc *FolderController) RemoveSpreading(c *gin.Context) {
+func (fc *FolderController) RemoveSpreadouts(c *gin.Context) {
 	userID := c.GetString("x-user-id")
 
-	var request domain.FolderRemoveSpreadingRequest
+	var request domain.FolderRemoveSpreadoutsRequest
 	err := c.ShouldBindBodyWith(&request, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	_, err = fc.SpreadingUsecase.FetchByID(c, request.SpreadingID)
+	_, err = fc.FolderUsecase.FetchOneByID(c, userID, request.FolderID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	folder, err := fc.FolderUsecase.FetchOneByID(c, userID, request.FolderID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	if !slices.Contains(folder.Spreadouts, request.SpreadingID) {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "The spreading is not in this folder"})
-		return
-	}
-
-	err = fc.FolderUsecase.RemoveSpreading(c, userID, request.FolderID, request.SpreadingID)
+	err = fc.FolderUsecase.RemoveSpreadouts(c, userID, request.FolderID, request.SpreadoutsIDS)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -205,32 +175,26 @@ func (fc *FolderController) RemoveSpreading(c *gin.Context) {
 	})
 }
 
-// AddSpreading	godoc
-// @Summary		Добавить раскидку в папку
+// AddSpreadouts godoc
+// @Summary		Добавить раскидки в папку
 // @Tags        Folder
 // @Router      /api/folder/spreading [put]
 // @Success		200		{object}	domain.SuccessResponse
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       request	body		domain.FolderAddSpreadingRequest	true	"request"
+// @Param       request	body		domain.FolderAddSpreadoutsRequest	true	"request"
 // @Produce		json
 // @Security 	Bearer
-func (fc *FolderController) AddSpreading(c *gin.Context) {
+func (fc *FolderController) AddSpreadouts(c *gin.Context) {
 	userID := c.GetString("x-user-id")
 
-	var request domain.FolderAddSpreadingRequest
+	var request domain.FolderAddSpreadoutsRequest
 	err := c.ShouldBindBodyWith(&request, binding.JSON)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	_, err = fc.SpreadingUsecase.FetchByID(c, request.SpreadingID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	err = fc.FolderUsecase.AddSpreading(c, userID, request.FolderID, request.SpreadingID)
+	err = fc.FolderUsecase.AddSpreadouts(c, userID, request.FolderID, request.SpreadoutsIDS)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -238,5 +202,36 @@ func (fc *FolderController) AddSpreading(c *gin.Context) {
 
 	c.JSON(http.StatusOK, domain.SuccessResponse{
 		Message: "Folder updated successfully",
+	})
+}
+
+// DeleteFolder godoc
+// @Summary		Удалить папку
+// @Tags        Folder
+// @Router      /api/folder/{id} [delete]
+// @Success		200		{object}	domain.SuccessResponse
+// @Failure		400		{object}	domain.ErrorResponse
+// @Param       id	path	string	true	"id"
+// @Produce		json
+// @Security 	Bearer
+func (fc *FolderController) DeleteFolder(c *gin.Context) {
+	userID := c.GetString("x-user-id")
+	folderID := c.Param("id")
+
+	_, err := fc.FolderUsecase.FetchOneByID(c, userID, folderID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "Folder not found"})
+		return
+	}
+
+	err = fc.FolderUsecase.DeleteOneByID(c, userID, folderID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.SuccessResponse{
+		Message: "Folder deleted successfully",
 	})
 }

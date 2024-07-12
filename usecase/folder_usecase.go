@@ -37,26 +37,32 @@ func (fu *folderUsecase) FetchOneByID(c context.Context, userID string, folderID
 	return fu.folderRepository.FetchOneByID(ctx, userID, folderID)
 }
 
-func (fu *folderUsecase) AddStrategy(c context.Context, userID string, folderID string, strategyID string) error {
+func (fu *folderUsecase) DeleteOneByID(c context.Context, userID string, folderID string) error {
 	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return fu.folderRepository.AddStrategy(ctx, userID, folderID, strategyID)
+	return fu.folderRepository.DeleteOneByID(ctx, userID, folderID)
 }
 
-func (fu *folderUsecase) AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
+func (fu *folderUsecase) AddStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error {
 	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return fu.folderRepository.AddSpreading(ctx, userID, folderID, spreadingID)
+	return fu.folderRepository.AddStrategies(ctx, userID, folderID, strategiesIDS)
 }
 
-func (fu *folderUsecase) RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error {
+func (fu *folderUsecase) AddSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error {
 	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return fu.folderRepository.RemoveStrategy(ctx, userID, folderID, strategyID)
+	return fu.folderRepository.AddSpreadouts(ctx, userID, folderID, spreadoutsIDS)
 }
 
-func (fu *folderUsecase) RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error {
+func (fu *folderUsecase) RemoveStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error {
 	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
 	defer cancel()
-	return fu.folderRepository.RemoveSpreading(ctx, userID, folderID, spreadingID)
+	return fu.folderRepository.RemoveStrategies(ctx, userID, folderID, strategiesIDS)
+}
+
+func (fu *folderUsecase) RemoveSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error {
+	ctx, cancel := context.WithTimeout(c, fu.contextTimeout)
+	defer cancel()
+	return fu.folderRepository.RemoveSpreadouts(ctx, userID, folderID, spreadoutsIDS)
 }

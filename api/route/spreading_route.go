@@ -24,5 +24,5 @@ func NewSpreadingRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Data
 	group.POST("/spreading", sc.Create)
 	group.GET("/spreading/:id", sc.FetchOne)
 	group.PUT("/spreading/:id", sc.Update)
-	group.DELETE("/spreading/:id", sc.DeleteOne)
+	group.DELETE("/spreading", sc.DeleteMany)
 }

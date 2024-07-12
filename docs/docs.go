@@ -195,7 +195,7 @@ const docTemplate = `{
                 "tags": [
                     "Folder"
                 ],
-                "summary": "Добавить раскидку в папку",
+                "summary": "Добавить раскидки в папку",
                 "parameters": [
                     {
                         "description": "request",
@@ -203,7 +203,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.FolderAddSpreadingRequest"
+                            "$ref": "#/definitions/domain.FolderAddSpreadoutsRequest"
                         }
                     }
                 ],
@@ -234,7 +234,7 @@ const docTemplate = `{
                 "tags": [
                     "Folder"
                 ],
-                "summary": "Удалить раскидку из папки",
+                "summary": "Удалить раскидки из папки",
                 "parameters": [
                     {
                         "description": "request",
@@ -242,7 +242,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.FolderRemoveSpreadingRequest"
+                            "$ref": "#/definitions/domain.FolderRemoveSpreadoutsRequest"
                         }
                     }
                 ],
@@ -275,7 +275,7 @@ const docTemplate = `{
                 "tags": [
                     "Folder"
                 ],
-                "summary": "Добавить стратегию в папку",
+                "summary": "Добавить стратегии в папку",
                 "parameters": [
                     {
                         "description": "request",
@@ -283,7 +283,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.FolderAddStrategyRequest"
+                            "$ref": "#/definitions/domain.FolderAddStrategiesRequest"
                         }
                     }
                 ],
@@ -314,7 +314,7 @@ const docTemplate = `{
                 "tags": [
                     "Folder"
                 ],
-                "summary": "Удалить стратегию из папки",
+                "summary": "Удалить стратегии из папки",
                 "parameters": [
                     {
                         "description": "request",
@@ -322,8 +322,47 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.FolderRemoveStrategyRequest"
+                            "$ref": "#/definitions/domain.FolderRemoveStrategiesRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/folder/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Folder"
+                ],
+                "summary": "Удалить папку",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -546,6 +585,42 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Spreading"
+                ],
+                "summary": "Удалить раскидки",
+                "parameters": [
+                    {
+                        "description": "spreadouts ids",
+                        "name": "delete",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SpreadoutsDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
             }
         },
         "/api/spreading/{id}": {
@@ -615,40 +690,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.SpreadingUpdateRequest"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Spreading"
-                ],
-                "summary": "Удалить раскидку",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -745,6 +786,42 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Strategy"
+                ],
+                "summary": "Удалить стратегии",
+                "parameters": [
+                    {
+                        "description": "strategies ids",
+                        "name": "delete",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.StrategiesDeleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
             }
         },
         "/api/strategy/{id}": {
@@ -814,40 +891,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.StrategyUpdateRequest"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Strategy"
-                ],
-                "summary": "Удалить стратегию",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1260,33 +1303,39 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.FolderAddSpreadingRequest": {
+        "domain.FolderAddSpreadoutsRequest": {
             "type": "object",
             "required": [
                 "folder_id",
-                "spreading_id"
+                "spreadouts_ids"
             ],
             "properties": {
                 "folder_id": {
                     "type": "string"
                 },
-                "spreading_id": {
-                    "type": "string"
+                "spreadouts_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
-        "domain.FolderAddStrategyRequest": {
+        "domain.FolderAddStrategiesRequest": {
             "type": "object",
             "required": [
                 "folder_id",
-                "strategy_id"
+                "strategies_ids"
             ],
             "properties": {
                 "folder_id": {
                     "type": "string"
                 },
-                "strategy_id": {
-                    "type": "string"
+                "strategies_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -1302,33 +1351,39 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.FolderRemoveSpreadingRequest": {
+        "domain.FolderRemoveSpreadoutsRequest": {
             "type": "object",
             "required": [
                 "folder_id",
-                "spreading_id"
+                "spreadouts_ids"
             ],
             "properties": {
                 "folder_id": {
                     "type": "string"
                 },
-                "spreading_id": {
-                    "type": "string"
+                "spreadouts_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
-        "domain.FolderRemoveStrategyRequest": {
+        "domain.FolderRemoveStrategiesRequest": {
             "type": "object",
             "required": [
                 "folder_id",
-                "strategy_id"
+                "strategies_ids"
             ],
             "properties": {
                 "folder_id": {
                     "type": "string"
                 },
-                "strategy_id": {
-                    "type": "string"
+                "strategies_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -1563,6 +1618,34 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 100,
                     "minLength": 1
+                }
+            }
+        },
+        "domain.SpreadoutsDeleteRequest": {
+            "type": "object",
+            "required": [
+                "spreadouts_ids"
+            ],
+            "properties": {
+                "spreadouts_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "domain.StrategiesDeleteRequest": {
+            "type": "object",
+            "required": [
+                "strategies_ids"
+            ],
+            "properties": {
+                "strategies_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

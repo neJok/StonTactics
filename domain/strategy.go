@@ -22,7 +22,7 @@ type StrategyRepository interface {
 	Create(c context.Context, strategy *Strategy) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
-	DeleteByID(c context.Context, userID string, strategyID string) error
+	DeleteByIDS(c context.Context, userID string, strategiesIDS []string) error
 	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }
@@ -31,7 +31,7 @@ type StrategyUsecase interface {
 	Create(c context.Context, strategy *Strategy) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]StrategyResponse, error)
 	FetchByID(c context.Context, id string) (Strategy, error)
-	DeleteByID(c context.Context, userID string, strategyID string) error
+	DeleteByIDS(c context.Context, userID string, strategiesIDS []string) error
 	Update(c context.Context, id string, parts map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }
@@ -46,6 +46,10 @@ type StrategyCreateRequest struct {
 	Name    string                 `bson:"name" form:"name" binding:"required,max=100,min=1" json:"name"`
 	Parts   map[string]interface{} `bson:"parts" form:"parts" binding:"required" json:"parts"`
 	MapName string                 `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
+}
+
+type StrategiesDeleteRequest struct {
+	StrategiesIDS []string `bson:"strategies_ids" form:"strategies_ids" binding:"required" json:"strategies_ids"`
 }
 
 type StrategyUpdateRequest struct {

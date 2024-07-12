@@ -72,25 +72,29 @@ definitions:
     required:
     - name
     type: object
-  domain.FolderAddSpreadingRequest:
+  domain.FolderAddSpreadoutsRequest:
     properties:
       folder_id:
         type: string
-      spreading_id:
-        type: string
+      spreadouts_ids:
+        items:
+          type: string
+        type: array
     required:
     - folder_id
-    - spreading_id
+    - spreadouts_ids
     type: object
-  domain.FolderAddStrategyRequest:
+  domain.FolderAddStrategiesRequest:
     properties:
       folder_id:
         type: string
-      strategy_id:
-        type: string
+      strategies_ids:
+        items:
+          type: string
+        type: array
     required:
     - folder_id
-    - strategy_id
+    - strategies_ids
     type: object
   domain.FolderCreateRequest:
     properties:
@@ -100,25 +104,29 @@ definitions:
     required:
     - name
     type: object
-  domain.FolderRemoveSpreadingRequest:
+  domain.FolderRemoveSpreadoutsRequest:
     properties:
       folder_id:
         type: string
-      spreading_id:
-        type: string
+      spreadouts_ids:
+        items:
+          type: string
+        type: array
     required:
     - folder_id
-    - spreading_id
+    - spreadouts_ids
     type: object
-  domain.FolderRemoveStrategyRequest:
+  domain.FolderRemoveStrategiesRequest:
     properties:
       folder_id:
         type: string
-      strategy_id:
-        type: string
+      strategies_ids:
+        items:
+          type: string
+        type: array
     required:
     - folder_id
-    - strategy_id
+    - strategies_ids
     type: object
   domain.LoginRequest:
     properties:
@@ -283,6 +291,24 @@ definitions:
     required:
     - elements
     - map_name
+    type: object
+  domain.SpreadoutsDeleteRequest:
+    properties:
+      spreadouts_ids:
+        items:
+          type: string
+        type: array
+    required:
+    - spreadouts_ids
+    type: object
+  domain.StrategiesDeleteRequest:
+    properties:
+      strategies_ids:
+        items:
+          type: string
+        type: array
+    required:
+    - strategies_ids
     type: object
   domain.Strategy:
     properties:
@@ -453,15 +479,14 @@ paths:
       summary: Создать папку
       tags:
       - Folder
-  /api/folder/spreading:
+  /api/folder/{id}:
     delete:
       parameters:
-      - description: request
-        in: body
-        name: request
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/domain.FolderRemoveSpreadingRequest'
+        type: string
       produces:
       - application/json
       responses:
@@ -475,7 +500,32 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Удалить раскидку из папки
+      summary: Удалить папку
+      tags:
+      - Folder
+  /api/folder/spreading:
+    delete:
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FolderRemoveSpreadoutsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить раскидки из папки
       tags:
       - Folder
     put:
@@ -485,7 +535,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/domain.FolderAddSpreadingRequest'
+          $ref: '#/definitions/domain.FolderAddSpreadoutsRequest'
       produces:
       - application/json
       responses:
@@ -499,7 +549,7 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Добавить раскидку в папку
+      summary: Добавить раскидки в папку
       tags:
       - Folder
   /api/folder/strategy:
@@ -510,7 +560,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/domain.FolderRemoveStrategyRequest'
+          $ref: '#/definitions/domain.FolderRemoveStrategiesRequest'
       produces:
       - application/json
       responses:
@@ -524,7 +574,7 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Удалить стратегию из папки
+      summary: Удалить стратегии из папки
       tags:
       - Folder
     put:
@@ -534,7 +584,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/domain.FolderAddStrategyRequest'
+          $ref: '#/definitions/domain.FolderAddStrategiesRequest'
       produces:
       - application/json
       responses:
@@ -548,7 +598,7 @@ paths:
             $ref: '#/definitions/domain.ErrorResponse'
       security:
       - Bearer: []
-      summary: Добавить стратегию в папку
+      summary: Добавить стратегии в папку
       tags:
       - Folder
   /api/payment/create/tinkoff:
@@ -627,6 +677,28 @@ paths:
       tags:
       - ChangeEmail
   /api/spreading:
+    delete:
+      parameters:
+      - description: spreadouts ids
+        in: body
+        name: delete
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SpreadoutsDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить раскидки
+      tags:
+      - Spreading
     get:
       parameters:
       - description: ids
@@ -678,27 +750,6 @@ paths:
       tags:
       - Spreading
   /api/spreading/{id}:
-    delete:
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
-      security:
-      - Bearer: []
-      summary: Удалить раскидку
-      tags:
-      - Spreading
     get:
       parameters:
       - description: id
@@ -750,6 +801,28 @@ paths:
       tags:
       - Spreading
   /api/strategy:
+    delete:
+      parameters:
+      - description: strategies ids
+        in: body
+        name: delete
+        required: true
+        schema:
+          $ref: '#/definitions/domain.StrategiesDeleteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Удалить стратегии
+      tags:
+      - Strategy
     get:
       parameters:
       - description: ids
@@ -801,27 +874,6 @@ paths:
       tags:
       - Strategy
   /api/strategy/{id}:
-    delete:
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorResponse'
-      security:
-      - Bearer: []
-      summary: Удалить стратегию
-      tags:
-      - Strategy
     get:
       parameters:
       - description: id

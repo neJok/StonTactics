@@ -150,20 +150,27 @@ func (sc *StrategyController) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
-// DeleteOne	godoc
-// @Summary		Удалить стратегию
+// DeleteMany	godoc
+// @Summary		Удалить стратегии
 // @Tags        Strategy
-// @Router      /api/strategy/{id} [delete]
+// @Router      /api/strategy [delete]
 // @Success		200		{object}	nil
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       id		path	string	true	"id"
+// @Param       delete	body	domain.StrategiesDeleteRequest	true	"strategies ids"
 // @Produce		json
 // @Security 	Bearer
-func (sc *StrategyController) DeleteOne(c *gin.Context) {
-	id := c.Param("id")
+func (sc *StrategyController) DeleteMany(c *gin.Context) {
 	userID := c.GetString("x-user-id")
 
-	err := sc.StrategyUsecase.DeleteByID(c, userID, id)
+	var strategiesDeleteRequest domain.StrategiesDeleteRequest
+	err := c.ShouldBindBodyWith(&strategiesDeleteRequest, binding.JSON)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+
+	err = sc.StrategyUsecase.DeleteByIDS(c, userID, strategiesDeleteRequest.StrategiesIDS)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return

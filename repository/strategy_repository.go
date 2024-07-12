@@ -93,14 +93,18 @@ func (sr *strategyRepository) GetCount(c context.Context, userID string) int64 {
 	return count
 }
 
-func (sr *strategyRepository) DeleteByID(c context.Context, userID, strategyID string) error {
+func (sr *strategyRepository) DeleteByIDS(c context.Context, userID string, strategiesIDS []string) error {
 	collection := sr.database.Collection(sr.collection)
 
-	idHex, err := primitive.ObjectIDFromHex(strategyID)
-	if err != nil {
-		return err
+	ids := make([]primitive.ObjectID, 0)
+	for _, strategyID := range strategiesIDS {
+		idHex, err := primitive.ObjectIDFromHex(strategyID)
+		if err != nil {
+			return err
+		}
+		ids = append(ids, idHex)
 	}
 
-	_, err = collection.DeleteOne(c, bson.M{"user_id": userID, "_id": idHex})
+	_, err := collection.DeleteMany(c, bson.M{"user_id": userID, "_id": bson.M{"$in": ids}})
 	return err
 }

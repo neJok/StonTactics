@@ -22,42 +22,44 @@ type FolderRepository interface {
 	Create(c context.Context, Folder *Folder) error
 	FetchByUserID(c context.Context, userID string) ([]Folder, error)
 	FetchOneByID(c context.Context, userID string, folderID string) (Folder, error)
-	AddStrategy(c context.Context, userID string, folderID string, strategyID string) error
-	RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error
-	AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error
-	RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error
+	DeleteOneByID(c context.Context, userID string, folderID string) error
+	AddStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error
+	RemoveStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error
+	AddSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error
+	RemoveSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error
 }
 
 type FolderUsecase interface {
 	Create(c context.Context, Folder *Folder) error
 	FetchByUserID(c context.Context, userID string) ([]Folder, error)
 	FetchOneByID(c context.Context, userID string, folderID string) (Folder, error)
-	AddStrategy(c context.Context, userID string, folderID string, strategyID string) error
-	RemoveStrategy(c context.Context, userID string, folderID string, strategyID string) error
-	AddSpreading(c context.Context, userID string, folderID string, spreadingID string) error
-	RemoveSpreading(c context.Context, userID string, folderID string, spreadingID string) error
+	DeleteOneByID(c context.Context, userID string, folderID string) error
+	AddStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error
+	RemoveStrategies(c context.Context, userID string, folderID string, strategiesIDS []string) error
+	AddSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error
+	RemoveSpreadouts(c context.Context, userID string, folderID string, spreadoutsIDS []string) error
 }
 
 type FolderCreateRequest struct {
 	Name string `bson:"name" form:"name" binding:"required,max=100" json:"name"`
 }
 
-type FolderAddStrategyRequest struct {
-	FolderID   string `json:"folder_id" binding:"required"`
-	StrategyID string `json:"strategy_id" binding:"required"`
+type FolderAddStrategiesRequest struct {
+	FolderID      string   `json:"folder_id" binding:"required"`
+	StrategiesIDS []string `json:"strategies_ids" binding:"required"`
 }
 
-type FolderRemoveStrategyRequest struct {
-	FolderID   string `json:"folder_id" binding:"required"`
-	StrategyID string `json:"strategy_id" binding:"required"`
+type FolderRemoveStrategiesRequest struct {
+	FolderID      string   `json:"folder_id" binding:"required"`
+	StrategiesIDS []string `json:"strategies_ids" binding:"required"`
 }
 
-type FolderAddSpreadingRequest struct {
-	FolderID    string `json:"folder_id" binding:"required"`
-	SpreadingID string `json:"spreading_id" binding:"required"`
+type FolderAddSpreadoutsRequest struct {
+	FolderID      string   `json:"folder_id" binding:"required"`
+	SpreadoutsIDS []string `json:"spreadouts_ids" binding:"required"`
 }
 
-type FolderRemoveSpreadingRequest struct {
-	FolderID    string `json:"folder_id" binding:"required"`
-	SpreadingID string `json:"spreading_id" binding:"required"`
+type FolderRemoveSpreadoutsRequest struct {
+	FolderID      string   `json:"folder_id" binding:"required"`
+	SpreadoutsIDS []string `json:"spreadouts_ids" binding:"required"`
 }

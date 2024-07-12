@@ -93,14 +93,19 @@ func (sr *spreadingRepository) GetCount(c context.Context, userID string) int64 
 	return count
 }
 
-func (sr *spreadingRepository) DeleteByID(c context.Context, userID, spreadingID string) error {
+func (sr *spreadingRepository) DeleteByIDS(c context.Context, userID string, spreadoutsIDS []string) error {
 	collection := sr.database.Collection(sr.collection)
 
-	idHex, err := primitive.ObjectIDFromHex(spreadingID)
-	if err != nil {
-		return err
+	ids := make([]primitive.ObjectID, 0)
+	for _, strategyID := range spreadoutsIDS {
+		idHex, err := primitive.ObjectIDFromHex(strategyID)
+		if err != nil {
+			return err
+		}
+		ids = append(ids, idHex)
 	}
 
-	_, err = collection.DeleteOne(c, bson.M{"user_id": userID, "_id": idHex})
+
+	_, err := collection.DeleteOne(c, bson.M{"user_id": userID, "_id": bson.M{"$in": ids}})
 	return err
 }

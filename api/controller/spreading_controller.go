@@ -151,20 +151,26 @@ func (sc *SpreadingController) Update(c *gin.Context) {
 }
 
 
-// DeleteOne	godoc
-// @Summary		Удалить раскидку
+// DeleteMany	godoc
+// @Summary		Удалить раскидки
 // @Tags        Spreading
-// @Router      /api/spreading/{id} [delete]
+// @Router      /api/spreading [delete]
 // @Success		200		{object}	nil
 // @Failure		400		{object}	domain.ErrorResponse
-// @Param       id		path	string	true	"id"
+// @Param       delete	body	domain.SpreadoutsDeleteRequest	true	"spreadouts ids"
 // @Produce		json
 // @Security 	Bearer
-func (sc *SpreadingController) DeleteOne(c *gin.Context) {
-	id := c.Param("id")
+func (sc *SpreadingController) DeleteMany(c *gin.Context) {
 	userID := c.GetString("x-user-id")
 
-	err := sc.SpreadingUsecase.DeleteByID(c, userID, id)
+	var spreadoutsDeleteRequest domain.SpreadoutsDeleteRequest
+	err := c.ShouldBindBodyWith(&spreadoutsDeleteRequest, binding.JSON)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	err = sc.SpreadingUsecase.DeleteByIDS(c, userID, spreadoutsDeleteRequest.SpreadoutsIDS)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
 		return

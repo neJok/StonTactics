@@ -24,8 +24,9 @@ func NewFolderRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Databas
 	}
 	group.GET("/folder", sc.FetchAll)
 	group.POST("/folder", sc.Create)
-	group.PUT("/folder/strategy", sc.AddStrategy)
-	group.PUT("/folder/spreading", sc.AddSpreading)
-	group.DELETE("/folder/spreading", sc.RemoveSpreading)
-	group.DELETE("/folder/strategy", sc.RemoveStrategy)
+	group.PUT("/folder/strategy", sc.AddStrategies)
+	group.PUT("/folder/spreading", sc.AddSpreadouts)
+	group.DELETE("/folder/spreading", sc.RemoveSpreadouts)
+	group.DELETE("/folder/strategy", sc.RemoveStrategies)
+	group.DELETE("/folder/:id", sc.DeleteFolder)
 }

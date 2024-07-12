@@ -22,7 +22,7 @@ type SpreadingRepository interface {
 	Create(c context.Context, spreading *Spreading) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
-	DeleteByID(c context.Context, userID string, spreadingID string) error
+	DeleteByIDS(c context.Context, userID string, spreadoutsIDS []string) error
 	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }
@@ -31,7 +31,7 @@ type SpreadingUsecase interface {
 	Create(c context.Context, spreading *Spreading) error
 	FetchMany(c context.Context, userID string, ids []primitive.ObjectID) ([]SpreadingResponse, error)
 	FetchByID(c context.Context, id string) (Spreading, error)
-	DeleteByID(c context.Context, userID string, spreadingID string) error
+	DeleteByIDS(c context.Context, userID string, spreadoutsIDS []string) error
 	Update(c context.Context, id string, elements []map[string]interface{}, mapName string) error
 	GetCount(c context.Context, userID string) int64
 }
@@ -48,7 +48,11 @@ type SpreadingCreateRequest struct {
 	MapName  string                   `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }
 
+type SpreadoutsDeleteRequest struct {
+	SpreadoutsIDS []string `bson:"spreadouts_ids" form:"spreadouts_ids" binding:"required" json:"spreadouts_ids"`
+}
+
 type SpreadingUpdateRequest struct {
 	Elements []map[string]interface{} `bson:"elements" form:"elements" binding:"required" json:"elements"`
-	MapName string               	  `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
+	MapName  string                   `bson:"map_name" form:"map_name" binding:"required,max=100,min=1" json:"map_name"`
 }
